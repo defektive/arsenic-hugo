@@ -1,0 +1,26 @@
+{{ define "page_header" }}
+<div class="container">
+		 <h2>Summary of {{ .Title }}</h2>
+ </div>
+{{ end }}
+
+{{ define "main" }}
+
+	<div class="container">
+       {{ if .Content }}
+           <div class="content">{{ .Content }}</div>
+       {{ end }}
+
+               <ul class="posts-list">
+                   {{ range .Pages }}
+                       <li class="post-item">
+                           <a href="{{.Permalink}}">
+                               <span class="post-title">{{.Dir}}</span>
+                               <span class="post-day">
+                               </span>
+                           </a>
+                       </li>
+                   {{ end }}
+               </ul>
+   </div>
+{{ end }}

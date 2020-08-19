@@ -1,0 +1,6 @@
+name = "arsenic"
+description = "Pentesting data never looked so good"
+min_version= "0.48"
+
+[author]
+  name = "defektive"

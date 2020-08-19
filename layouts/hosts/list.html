@@ -1,0 +1,13 @@
+{{ define "page_header" }}
+<div class="container">
+		 <h2>Summary of {{ .Title }}</h2>
+ </div>
+{{ end }}
+
+
+{{ define "main" }}
+	<div class="container">
+
+			{{ partial "host-table.html" . }}
+	</div>
+{{ end }}
