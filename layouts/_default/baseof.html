@@ -55,10 +55,9 @@
       </li>
       {{ end }}
 
-
 			{{ if len (where .Site.Pages "Section" "social") }}
       <li class="nav-item">
-        <a class="nav-link {{ if or ($currentPage.IsMenuCurrent "main" .) (eq $currentPage.Section "social") }} active {{end}}" href="/social/">
+        <a class="nav-link {{ if (eq $currentPage.Section "social") }} active {{end}}" href="/social/">
           Social
         </a>
       </li>
@@ -67,7 +66,7 @@
 
 			{{ if len (where .Site.Pages "Section" "mobile") }}
       <li class="nav-item">
-        <a class="nav-link {{ if or ($currentPage.IsMenuCurrent "main" .) (eq $currentPage.Section "mobile") }} active {{end}}" href="/mobile/">
+        <a class="nav-link {{ if (eq $currentPage.Section "mobile") }} active {{end}}" href="/mobile/">
           Mobile
         </a>
       </li>
