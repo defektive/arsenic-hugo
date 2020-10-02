@@ -159,6 +159,32 @@
 			</div>
 		{{ end }}
 
+		{{$services_xml := print "content/" .Dir "/recon/" $ip  "_services.xml" }}
+		{{ if or (fileExists $services_xml) }}
+			{{$services_xml_path := print "/" .Dir "/recon/" $ip  "_services.xml" }}
+			<div class="card">
+				<div class="card-header" id="recon-heading-nmap">
+					<h2 class="mb-0">
+						<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#recon-collapse-nmap" aria-expanded="true" aria-controls="recon-collapse-nmap">
+							 nmap xml
+						</button>
+					</h2>
+				</div>
+
+		    <div id="recon-collapse-nmap" class="collapse show" aria-labelledby="recon-heading-nmap" data-parent="#recon-accordian">
+		      <div class="card-body">
+					{{ if and (fileExists $services_xml)}}
+						<a href="{{ $services_xml_path }}" target="nmap-frame">Mage</a>
+					{{ end }}
+
+					<iframe name="nmap-frame" src="{{ if and (fileExists $services_xml) -}}
+					{{ $services_xml_path -}}
+					{{ end -}}" style="height: 500px; width: 100%"></iframe>
+					</div>
+				</div>
+			</div>
+		{{ end }}
+
 	  {{ range $index, $element := (readDir $reconDir) }}
 			{{ if and (ne $element.Name "nmap-punched.gnmap") (ne $element.Name "nmap-punched.xml") (not (in $element.Name "aquatone")) (not (in $element.Name "ignore_"))  }}
 
