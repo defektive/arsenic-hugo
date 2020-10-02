@@ -16,5 +16,15 @@ ar-recon-discover-domains
 
 ```bash
 echo 192.168.0.1/24 > scope-ips.txt
-ar-recon-discover-ips
+ar-recon-discover-hosts
 ```
+
+Or if you want to that and more you can run
+
+```bash
+echo example.com > scope-domains.txt
+echo 192.168.0.1/24 > scope-ips.txt
+arsenic
+```
+
+See [arsenic](https://github.com/defektive/arsenic) for more information
