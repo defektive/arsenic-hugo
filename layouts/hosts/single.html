@@ -1,4 +1,6 @@
+
 {{ define "page_header" }}
+{{ $ip := print (replace (replace .Dir "hosts/" "") "/" "") }}
 <div class="container">
 		 <h2>
 		 		{{ if in .Params.flags "Out of Scope" }}
@@ -6,7 +8,7 @@
 		 		{{ end }}
      </h2>
 		 <h2>
-      {{ replace (replace .Dir "hosts/" "") "/" "" }}
+      {{ $ip }}
       {{$hostname := print .Dir  "/hostname" }}
       {{ if (fileExists $hostname) -}}
       {{readFile $hostname }}
@@ -16,10 +18,11 @@
 {{ end }}
 
 {{ define "main" }}
+{{ $ip := print (replace (replace .Dir "hosts/" "") "/" "") }}
 <div class="container d-flex">
 	<div class="p-2 flex-fill">
 		Reviewed By: {{ .Params.reviewer }}<br />
-		IP: {{ replace (replace .Dir "hosts/" "") "/"  ""}}<br />
+		IP: {{ $ip }}<br />
 	</div>
 
 
@@ -122,41 +125,40 @@
 		<h3>Recon</h3>
 		<div class="accordion" id="recon-accordian">
 
+		{{ $.Scratch.Set "counter" 0 }}
+	  {{ range $index, $element := (readDir $reconDir) }}
+			{{ if (in $element.Name "aquatone") }}
+				{{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
+				{{$aquatonePath := print "/" ( replace $reconDir "content/" "" ) "/" $element.Name  "/aquatone_report.html#/pages/single" }}
+				{{ if eq ($.Scratch.Get "counter") 1 }}
+				<div class="card">
+					<div class="card-header" id="recon-heading-aquatone">
+						<h2 class="mb-0">
+							<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#recon-collapse-aquatone" aria-expanded="true" aria-controls="recon-collapse-aquatone">
+								 Aquatone
+							</button>
+						</h2>
+					</div>
 
+					<div id="recon-collapse-aquatone" class="collapse show" aria-labelledby="recon-heading-aquatone" data-parent="#recon-accordian">
+						<div class="card-body">
+				{{ end }}
+							<a href="{{ $aquatonePath }}" target="aquatone-frame">{{ $element.Name }}</a>
+			{{ end }}
+		{{ end }}
 
-		{{$aquatoneInt := print "content/" .Dir "/recon/aquatone-interesting/aquatone_report.html" }}
-		{{$aquatoneDir := print "content/" .Dir "/recon/aquatone-gobuster/aquatone_report.html" }}
-		{{ if or (fileExists $aquatoneDir) (fileExists $aquatoneInt) }}
-
-			{{$aquatoneIntPath := print "/" .Dir "/recon/aquatone-interesting/aquatone_report.html#/pages/single" }}
-			{{$aquatoneDirPath := print "/" .Dir "/recon/aquatone-gobuster/aquatone_report.html#/pages/single" }}
-			<div class="card">
-				<div class="card-header" id="recon-heading-aquatone">
-					<h2 class="mb-0">
-						<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#recon-collapse-aquatone" aria-expanded="true" aria-controls="recon-collapse-aquatone">
-							 Aquatone
-						</button>
-					</h2>
-				</div>
-
-		    <div id="recon-collapse-aquatone" class="collapse show" aria-labelledby="recon-heading-aquatone" data-parent="#recon-accordian">
-		      <div class="card-body">
-					{{ if and (fileExists $aquatoneInt)}}
-						<a href="{{ $aquatoneIntPath }}" target="aquatone-frame">Interesting</a>
-					{{ end }}
-
-					{{ if and (fileExists $aquatoneDir)}}
-						<a href="{{ $aquatoneDirPath }}" target="aquatone-frame">Gobuster</a>
-					{{ end }}
-
-					<iframe name="aquatone-frame" src="{{ if and (fileExists $aquatoneInt) -}}
-					{{ $aquatoneIntPath -}}
-					{{ else -}}
-						{{ $aquatoneDirPath -}}
-					{{ end -}}" style="height: 500px; width: 100%"></iframe>
+		{{ $.Scratch.Set "counter" 0 }}
+	  {{ range $index, $element := (readDir $reconDir) }}
+			{{ if (in $element.Name "aquatone") }}
+				{{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
+				{{$aquatonePath := print "/" ( replace $reconDir "content/" "" ) "/" $element.Name  "/aquatone_report.html#/pages/single" }}
+				{{ if eq ($.Scratch.Get "counter") 1 }}
+							<iframe name="aquatone-frame" src="{{ $aquatonePath }}" style="height: 500px; width: 100%"></iframe>
+						</div>
 					</div>
 				</div>
-			</div>
+				{{ end }}
+			{{ end }}
 		{{ end }}
 
 	  {{ range $index, $element := (readDir $reconDir) }}
