@@ -30,10 +30,7 @@
     <![endif]-->
 </head>
 <body>
-
-
-
-  {{ block "page_nav" . }}
+{{ block "page_nav" . }}
   <!-- Navigation -->
   <nav class="navbar  fixed-top  navbar-expand-lg  navbar-dark bg-dark">
     <a class="navbar-brand page-scroll" style="padding-left: 0px;margin-left: 0px;" href="#top">
@@ -42,7 +39,6 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
     <div class="collapse justify-content-end navbar-collapse" id="navbarSupportedContent">
       <div class="d-flex justify-content-end ">
       <ul class="navbar-nav">
@@ -62,7 +58,6 @@
         </a>
       </li>
 			{{ end }}
-
 
 			{{ if len (where .Site.Pages "Section" "mobile") }}
       <li class="nav-item">
@@ -84,13 +79,11 @@
           <a class="dropdown-item" href="https://cwe.mitre.org/data/index.html">CWE</a>
         </div>
       </li>
-
       </ul>
     </div>
     </div>
   </nav>
-
-  {{ end }}
+{{ end }}
 
 {{ block "page_header" . }}
   <section id="intro">
@@ -110,11 +103,10 @@
   </section>
 {{ end }}
 
-
-  <!-- Code that all your templates share, like a header -->
-    {{ block "main" . }}
-      <!-- The part of the page that begins to differ between templates -->
-    {{ end }}
+<!-- Code that all your templates share, like a header -->
+{{ block "main" . }}
+<!-- The part of the page that begins to differ between templates -->
+{{ end }}
 
 <footer>
     <div class="container">
