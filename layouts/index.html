@@ -1,284 +1,316 @@
 {{ define "page_header" }}
 <div class="container"></div>
 {{ end }}
-
 {{ define "main" }}
+
+{{ $.Scratch.Set "sectionCounter" 0 }}
 <section id="main">
+  <div class="container">
+    <a class="anchor" id="top"></a>
+    {{ $.Scratch.Set "sectionCounter" (add ($.Scratch.Get "sectionCounter") 1) }}
 
-	{{ if fileExists "content/sections/README.md" }}
-	<div class="container">
-			<a class="anchor" id="project-info"></a>
-			<a href="#top" class="pull-right">top</a>
-			<h2>Project Information</h2>
-			<p>
-			{{readFile "content/sections/README.md" | markdownify}}
-			</p>
-		<hr />
-	</div>
-	{{ end }}
+    <a href="#section-{{  add 1 ($.Scratch.Get "sectionCounter")  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-down" aria-hidden="true"></i></a>
+    <a class="anchor" id="section-{{ $.Scratch.Get "sectionCounter" }}"></a>
+    <h2><a href="#section-{{ ($.Scratch.Get "sectionCounter") }}">Table of Contents</a></h2>
+    <p>
+      <ul class="toc">
+        <li>
+          <a href="#project-info">Project information</a>
+        </li>
+        {{ range $index, $element := .Site.Params.reportSections }}
+          {{ $file := print "content/sections/" $element.file ".md" }}
+          {{ if fileExists $file }}
+        <li>
+          <a href="#{{$element.file}}">{{$element.label}}</a>
+        </li>
+          {{ end }}
+        {{ end }}
+        <li>
+          <a href="#findings-summary">Summary of Findings</a>
+        {{ if len (where .Site.Pages "Section" "social") }}
+          <li>
+            <a href="#social">Social</a>
+          </li>
+        {{ end }}
+        {{ if len (where .Site.Pages "Section" "mobile") }}
+          <li>
+            <a href="#mobile">Mobile</a>
+          </li>
+        {{ end }}
+          <li>
+            <a href="#findings">Findings</a>
+            <ul>
+        {{ $.Scratch.Set "counter" 0 }}
+        {{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
+          {{ if .Params.cvss.severity }}
+            {{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
+              <li>
+                <a href="#finding-{{  $.Scratch.Get "counter"  }}">#{{  $.Scratch.Get "counter"  }} {{ .Title | markdownify }}</a>
+              </li>
+          {{ end }}
+        {{ end }}
+            </ul>
+          </li>
+          <li>
+            <a href="#port-summary">Port Summary</a>
+          </li>
+        </ul>
+      </p>
+      <hr />
+    </div>
+  {{ if fileExists "content/sections/README.md" }}
+    <div class="container">
+      <a class="anchor" id="project-info"></a>
 
-	<div class="container">
-		<a class="anchor" id="top"></a>
-		<h2>Table of Contents</h2>
-		<p>
-			<ul>
-				<li><a href="#project-info">Project information</a></li>
-				{{ range $index, $element := .Site.Params.reportSections }}
-					{{ $file := print "content/sections/" $element.file ".md" }}
-					{{ if fileExists $file }}
-					<li><a href="#{{$element.file}}">{{$element.label}}</a></li>
-					{{ end }}
-				{{ end }}
-
-				<li><a href="#findings-summary">Summary of Findings</a>
-
-				{{ if len (where .Site.Pages "Section" "social") }}
-				<li><a href="#social">Social</a></li>
-				{{ end }}
-
-				{{ if len (where .Site.Pages "Section" "mobile") }}
-				<li><a href="#mobile">Mobile</a></li>
-				{{ end }}
-
-
-				<li><a href="#findings">Findings</a>
-					<ul>
-
-		      {{ $.Scratch.Set "counter" 0 }}
-					{{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
-						{{ if .Params.cvss.severity }}
-						{{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
-						<li><a href="#finding-{{  $.Scratch.Get "counter"  }}">#{{  $.Scratch.Get "counter"  }} {{ .Title | markdownify }}</a></li>
-						{{ end }}
-					{{ end }}
-					</ul>
-				</li>
-				<li><a href="#steps-to-repro">Steps to Reproduce</a>
-					<ul>
-
-					{{ $.Scratch.Set "counter" 0 }}
-
-					{{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
-						{{ if .Title }}
-						{{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
-							{{$steps_to_reproduce := print "content/" .Dir  "/steps_to_reproduce.md" }}
-							{{ if (fileExists $steps_to_reproduce) -}}
-						<li><a href="#finding-steps-{{  $.Scratch.Get "counter"  }}">#{{  $.Scratch.Get "counter"  }} {{ .Title | markdownify }}</a></li>
-						{{ end }}
-						{{ end }}
-					{{ end }}
-					</ul>
-				</li>
-				<li><a href="#scope">Scope</a></li>
-				<li><a href="#port-summary">Port Summary</a></li>
-			</ul>
-		</p>
-		<hr />
-	</div>
-
-	{{ range $index, $element := .Site.Params.reportSections }}
-		{{ $file := print "content/sections/" $element.file ".md" }}
-		{{ if fileExists $file }}
-		<div class="container">
-				<a class="anchor" id="executive-summary"></a>
-				<a href="#top" class="pull-right">top</a>
-				<h2>{{$element.label}}</h2>
-				<p>
-				{{readFile $file | markdownify}}
-				</p>
-			<hr />
-		</div>
-		{{ end }}
-	{{ end }}
-
-
-	<div class="container">
-			<a class="anchor" id="findings-summary"></a>
-			<a href="#top" class="pull-right">top</a>
-			<h2>Summary of Findings</h2>
-			<table class='table table-striped table-hover'>
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Severity</th>
-						<th>Description</th>
-					</tr>
-				</thead>
-
-	      {{ $.Scratch.Set "counter" 0 }}
-				{{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
-					{{ if .Params.cvss.severity }}
-					{{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
-					<tr>
-						<td><a href="#finding-{{  $.Scratch.Get "counter"  }}">#{{  $.Scratch.Get "counter"  }}</a></td>
-						<td>{{ .Params.cvss.severity }}</td>
-						<td>
-							<div><strong><a href="#finding-{{  $.Scratch.Get "counter"  }}">{{ .Title | markdownify }}</a></strong></div>
-							{{ .Description  | markdownify }}
-						</td>
-					</tr>
-					{{ end }}
-				{{ end }}
-			</table>
-		<hr />
-	</div>
-
-	{{ if len (where .Site.Pages "Section" "social") }}
-	<div class="container">
-			<a class="anchor" id="social"></a>
-			<a href="#top" class="pull-right">top</a>
-			<h2>Social</h2>
-			 <table class='table table-striped table-hover'>
-			   <thead>
-			     <tr>
-			       <th>Name</th>
-			       <th>Target Group</th>
-			       <th>Emails Sent</th>
-			       <th>Clicks</th>
-			     </tr>
-			   </thead>
-				 {{ range where .Site.Pages "Section" "social"   }}
-				      <tr>
-				        <td>
-				          <a href="{{.Permalink}}">
-				              <span class="post-title">{{ .Name }}</span>
-				          </a>
-				        </td>
-				        <td>
-				           {{ .Params.TargetGroup }}
-				          </td>
-				        <td>
-									{{ .Params.EmailsSent }}
-				         </td>
-				         <td>
-									 {{ .Params.EmailsViewed }}
-								 </td>
-				      </tr>
-         {{ end }}
-			 </table>
-		<hr />
-	</div>
-	{{ end }}
-
-
-	{{ if len (where .Site.Pages "Section" "mobile") }}
-	<div class="container">
-		<a class="anchor" id="mobile"></a>
-		<a href="#top" class="pull-right">top</a>
-
-		<h2>Mobile</h2>
-		<p>
-		{{readFile "content/mobile/README.md" | markdownify}}
-		</p>
-		<hr />
-	</div>
-	{{ end }}
-
-	<div class="container">
-			<a class="anchor" id="findings"></a>
-			<a href="#top" class="pull-right">top</a>
-			<h2 id="findings">Findings</h2>
-
-      {{ $.Scratch.Set "counter" 0 }}
-			{{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
-				{{ if .Params.cvss.severity }}
-				{{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
-
-
-					<div>
-						<a class="anchor" id="finding-{{  $.Scratch.Get "counter"  }}"></a>
-						<a href="#top" class="pull-right">top</a>
-			      <h2 class="section-heading">#{{  $.Scratch.Get "counter"  }} {{ .Title | markdownify }}</h2>
-
-<pre>
-Description: {{ .Params.description }}
-CVSS: {{ .Params.cvss.score }}
-CVSS Vector: {{ .Params.cvss.vector }}
-CWEs:
-{{ range .Params.cweRefs }}
- - {{.}}
+      {{ $.Scratch.Set "sectionCounter" (add ($.Scratch.Get "sectionCounter") 1) }}
+      <a href="#top" class="pull-right"><i class="fa fa-lg fa-home" aria-hidden="true"></i></a>
+      <a href="#section-{{  sub ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-up" aria-hidden="true"></i></a>
+      <a href="#section-{{  add ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-down" aria-hidden="true"></i></a>
+      <a class="anchor" id="section-{{ $.Scratch.Get "sectionCounter" }}"></a>
+      <h2><a href="#section-{{ ($.Scratch.Get "sectionCounter") }}">Project Information</a></h2>
+      <p>
+    {{readFile "content/sections/README.md" | markdownify}}</p>
+      <hr />
+    </div>
+  {{ end }}
+  {{ $severityScratch := newScratch }}
+  {{ $severityScratch.Set "CRITICAL" 0 }}
+  {{ $severityScratch.Set "HIGH" 0 }}
+  {{ $severityScratch.Set "MEDIUM" 0 }}
+  {{ $severityScratch.Set "LOW" 0 }}
+  {{ $severityScratch.Set "INFORMATIONAL" 0 }}
+  {{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
+    {{ if .Params.cvss.severity }}
+      {{ $severityScratch.Set (upper .Params.cvss.severity) (add ($severityScratch.Get (upper .Params.cvss.severity)) 1) }}
+    {{ end }}
+  {{ end }}
+  {{ range $index, $element := .Site.Params.reportSections }}
+  {{ $file := print "content/sections/" $element.file ".md" }}
+  {{ if fileExists $file }}
+    <div class="container"  id="container-{{ $element.file }}">
+      <a class="anchor" id="{{ $element.file }}"></a>
+      {{ $.Scratch.Set "sectionCounter" (add ($.Scratch.Get "sectionCounter") 1) }}
+      <a href="#top" class="pull-right"><i class="fa fa-lg fa-home" aria-hidden="true"></i></a>
+      <a href="#section-{{  sub ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-up" aria-hidden="true"></i></a>
+      <a href="#section-{{  add ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-down" aria-hidden="true"></i></a>
+      <a class="anchor" id="section-{{ $.Scratch.Get "sectionCounter" }}"></a>
+      <h2><a href="#section-{{ ($.Scratch.Get "sectionCounter") }}">{{$element.label}}</a></h2>
+      <p>
+    {{readFile $file | markdownify}}</p>
+    {{ if eq $element.file "executive_summary" }}
+      <table class="table">
+        <tr>
+          <td style="width:20%; text-align: center;">{{$severityScratch.Get "CRITICAL"}} </td>
+          <td style="width:20%; text-align: center;">{{$severityScratch.Get "HIGH"}} </td>
+          <td style="width:20%; text-align: center;">{{$severityScratch.Get "MEDIUM"}} </td>
+          <td style="width:20%; text-align: center;">{{$severityScratch.Get "LOW"}} </td>
+          <td style="width:20%; text-align: center;">{{$severityScratch.Get "INFORMATIONAL"}} </td>
+        </tr>
+        <tr>
+          <td style="text-align: center">CRITICAL</td>
+          <td style="text-align: center">HIGH</td>
+          <td style="text-align: center">MEDIUM</td>
+          <td style="text-align: center">LOW</td>
+          <td style="text-align: center">INFORMATIONAL</td>
+        </tr>
+      </table>
+    {{ end }}
+      <hr />
+    </div>
+  {{ end }}
 {{ end }}
-Affected Hosts:
-{{ range .Params.affectedHosts }}
- - {{.}}
+    <div class="container">
+      <a class="anchor" id="findings-summary"></a>
+      {{ $.Scratch.Set "sectionCounter" (add ($.Scratch.Get "sectionCounter") 1) }}
+      <a href="#top" class="pull-right"><i class="fa fa-lg fa-home" aria-hidden="true"></i></a>
+      <a href="#section-{{  sub ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-up" aria-hidden="true"></i></a>
+      <a href="#section-{{  add ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-down" aria-hidden="true"></i></a>
+      <a class="anchor" id="section-{{ $.Scratch.Get "sectionCounter" }}"></a>
+      <h2><a href="#section-{{ ($.Scratch.Get "sectionCounter") }}">Summary of Findings</a></h2>
+      <table class='table table-striped table-hover'>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Severity</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+    {{ $.Scratch.Set "counter" 0 }}
+    {{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
+      {{ if .Params.cvss.severity }}
+      {{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
+        <tr>
+          <td>
+            <a href="#finding-{{  $.Scratch.Get "counter"  }}">#{{  $.Scratch.Get "counter"  }}</a>
+          </td>
+          <td>{{ .Params.cvss.severity }}</td>
+          <td>
+            <div>
+              <strong>
+                <a href="#finding-{{  $.Scratch.Get "counter"  }}">{{ .Title | markdownify }}</a>
+              </strong>
+            </div>
+          {{ .Description  | markdownify }}
+          </td>
+        </tr>
+      {{ end }}
+    {{ end }}
+      </table>
+      <hr />
+    </div>
+{{ if len (where .Site.Pages "Section" "social") }}
+    <div class="container">
+      <a class="anchor" id="social"></a>
+      <a href="#top" class="pull-right">top</a>
+      <h2>Social</h2>
+      <table class='table table-striped table-hover'>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Target Group</th>
+            <th>Emails Sent</th>
+            <th>Clicks</th>
+          </tr>
+        </thead>
+   {{ range where .Site.Pages "Section" "social"   }}
+        <tr>
+          <td>
+            <a href="{{.Permalink}}">
+              <span class="post-title">{{ .Name }}</span>
+            </a>
+          </td>
+          <td>
+        {{ .Params.TargetGroup }}</td>
+          <td>
+        {{ .Params.EmailsSent }}</td>
+          <td>
+        {{ .Params.EmailsViewed }}</td>
+        </tr>
+  {{ end }}
+      </table>
+      <hr />
+    </div>
 {{ end }}
-</pre>
-
-						{{$summary := print "content/" .Dir  "/summary.md" }}
-						{{$affected_assets := print "content/" .Dir "/affected_assets.md" }}
-						{{$recommendations := print "content/" .Dir "/recommendations.md" }}
-						{{$references := print "content/" .Dir "/references.md" }}
-
-						{{readFile $summary | markdownify}}
-
-						<h3>Affected Assets</h3>
-						{{readFile $affected_assets | markdownify}}
-
-						<h3>Recommendations</h3>
-						{{readFile $recommendations | markdownify}}
-
-						<h3>References</h3>
-						{{readFile $references | markdownify}}
-
-						{{$steps_to_reproduce := print "content/" .Dir  "/steps_to_reproduce.md" }}
-						{{ if (fileExists $steps_to_reproduce) -}}
-						<h3>Steps to reproduce</h3>
-						See: <a href="#finding-steps-{{  $.Scratch.Get "counter"  }}">#{{  $.Scratch.Get "counter"  }} {{ .Title | markdownify }}</a>
-						{{ end }}
-
-					</div>
-	        <!-- /.container -->
-					<hr>
-				{{ end }}
-			{{ end }}
-		<hr />
-	</div>
-
-	{{$need_steps :=  true }}
+{{ if len (where .Site.Pages "Section" "mobile") }}
+    <div class="container">
+      <a class="anchor" id="mobile"></a>
+      {{ $.Scratch.Set "sectionCounter" (add ($.Scratch.Get "sectionCounter") 1) }}
+      <a href="#top" class="pull-right"><i class="fa fa-lg fa-home" aria-hidden="true"></i></a>
+      <a href="#section-{{  sub ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-up" aria-hidden="true"></i></a>
+      <a href="#section-{{  add ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-down" aria-hidden="true"></i></a>
+      <a class="anchor" id="section-{{ $.Scratch.Get "sectionCounter" }}"></a>
+      <h2><a href="#section-{{ ($.Scratch.Get "sectionCounter") }}">Mobile</a></h2>
+      <p>
+  {{readFile "content/mobile/README.md" | markdownify}}</p>
+      <hr />
+    </div>
+{{ end }}
+    <div class="container">
+      <a class="anchor" id="findings"></a>
+      {{ $.Scratch.Set "sectionCounter" (add ($.Scratch.Get "sectionCounter") 1) }}
+      <a href="#top" class="pull-right"><i class="fa fa-lg fa-home" aria-hidden="true"></i></a>
+      <a href="#section-{{  sub ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-up" aria-hidden="true"></i></a>
+      <a href="#section-{{  add ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-down" aria-hidden="true"></i></a>
+      <a class="anchor" id="section-{{ $.Scratch.Get "sectionCounter" }}"></a>
+      <h2><a href="#section-{{ ($.Scratch.Get "sectionCounter") }}">Findings</a></h2>
   {{ $.Scratch.Set "counter" 0 }}
-	{{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
-		{{ if .Title }}
-		{{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
-			{{$steps_to_reproduce := print "content/" .Dir  "/steps_to_reproduce.md" }}
-			{{ if (fileExists $steps_to_reproduce) -}}
-				{{ if (eq $need_steps true) }}
-					{{$need_steps = false}}
-	<div class="container">
-			<a class="anchor" id="steps-to-repro"></a>
-			<a href="#top" class="pull-right">top</a>
-			<h2>Steps to reproduce</h2>
-				{{end}}
+  {{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
+    {{ if .Params.cvss.severity }}
+    {{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
+      <div>
+        <a class="anchor" id="finding-{{ $.Scratch.Get "counter" }}"></a>
+        <div class="sticky-header">
+        <a href="#top" class="pull-right"><i class="fa fa-lg fa-home" aria-hidden="true"></i></a>
 
-				<div>
-					<a class="anchor" id="finding-steps-{{  $.Scratch.Get "counter"  }}"></a>
-					<a href="#top" class="pull-right">top</a>
-        	<h2 class="section-heading">#{{  $.Scratch.Get "counter"  }} {{ .Title | markdownify }}</h2>
-					{{readFile $steps_to_reproduce | markdownify}}
+        <a href="#finding-{{  sub ($.Scratch.Get "counter") 1  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-up" aria-hidden="true"></i></a>
+        <a href="#finding-{{  add 1 ($.Scratch.Get "counter")  }}" class="pull-right"><i class="fa fa-lg fa-arrow-circle-down" aria-hidden="true"></i></a>
+        <h2 class="section-heading"><a href="#finding-{{  ($.Scratch.Get "counter") }}">#{{  $.Scratch.Get "counter"  }} {{ .Title | markdownify }}</a> <br /><small>CVSS:{{ .Params.cvss.score }}/{{.Params.cvss.severity}}</small></h2>
         </div>
-			{{- end}}
-		{{ end }}
-	{{ end }}
-
-	{{ if eq $need_steps false }}
-		<hr />
-	</div>
-
-	{{end}}
-
-	<div class="container">
-			<a class="anchor" id="port-summary"></a>
-			<a href="#top" class="pull-right">top</a>
-
-			<h2>Summary of Ports</h2>
-			<p>
-				 <ul class="multi-column ports">
-			     {{ range .Site.Taxonomies.ports.ByCount }}
-	           <li><a href="{{ .Page.Permalink }}">{{ .Page.Title }}</a> {{ .Count }} hosts</li>
-			     {{ end }}
-				 </ul>
-			</p>
-		<hr />
-	</div>
-
-</section>
+        <blockquote>
+    {{ .Params.description }}</blockquote>
+        <div align="center">
+    Risk Rating: {{ .Params.exploitation.riskRating }}</div>
+        <table class="table">
+          <tr>
+            <td class="rotate-label">
+              <div>
+          Likelihood: {{ .Params.exploitation.likelihood }}</div>
+            </td>
+            <td>
+              <table class="table risk-table likelihood-{{ .Params.exploitation.likelihood }} impact-{{ .Params.exploitation.impact }} ">
+        {{ range $rx, $rt := (seq 6) }}
+                <tr class="risk-row-{{(sub 6 $rt)}} ">
+                  <td class="risk-col risk-rating-0">{{ sub 6 $rt  }}</td>
+            {{ range $cx, $ct := (seq 5) }}
+                  <td class="risk-col risk-col-{{$ct}} risk-rating-{{ (mul ( sub 6 $rt )  $ct ) }}">
+              {{ if eq (sub 6 $rt) 0 }}
+                {{$ct}}
+              {{ else }}
+                {{ (mul ( sub 6 $rt )  $ct ) }}
+              {{ end }}</td>
+            {{end}}
+                </tr>
+          {{end}}
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" align="center">
+          Impact: {{ .Params.exploitation.impact }}</td>
+          </tr>
+        </table>
+        <div>
+  {{$summary := print "content/" .Dir  "/summary.md" }}
+  {{$affected_assets := print "content/" .Dir "/affected_assets.md" }}
+  {{$recommendations := print "content/" .Dir "/recommendations.md" }}
+  {{$references := print "content/" .Dir "/references.md" }}
+  {{readFile $summary | markdownify}}
+          <h3>Affected Assets</h3>
+  {{readFile $affected_assets | markdownify}}
+          <h3>Recommendations</h3>
+  {{readFile $recommendations | markdownify}}
+          <h3>References</h3>
+  {{readFile $references | markdownify}}
+          <h4>CVSS and CWEs</h4>
+          <ul>
+            <li>
+              <a href="https://www.first.org/cvss/calculator/3.0#{{ .Params.cvss.vector }}">https://www.first.org/cvss/calculator/3.0#{{ .Params.cvss.vector }}</a>
+            </li>
+  {{ if len (.Params.cweRefs) }}
+  {{ range $cweI, $cwe := .Params.cweRefs }}
+            <li>
+              <a href="https://cwe.mitre.org/data/definitions/{{ replace $cwe "CWE-" "" }}.html">https://cwe.mitre.org/data/definitions/{{ replace $cwe "CWE-" "" }}.html</a>
+            </li>
+  {{ end }}
+  {{ end }}
+          </ul>
+  {{$steps_to_reproduce := print "content/" .Dir  "/steps_to_reproduce.md" }}
+  {{ if (fileExists $steps_to_reproduce) -}}
+          <h3>Steps to reproduce</h3>
+  {{readFile $steps_to_reproduce | markdownify}}
+  {{ end }}
+        </div>
+        <!-- /.container -->
+        <hr>
+  {{ end }}
+  {{ end }}
+          <hr />
+        </div>
+        <div class="container">
+          <a class="anchor" id="port-summary"></a>
+          <a href="#top" class="pull-right">top</a>
+          <h2>Summary of Ports</h2>
+          <p>
+            <ul class="multi-column ports">
+   {{ range .Site.Taxonomies.ports.ByCount }}
+              <li>
+                <a href="{{ .Page.Permalink }}">{{ .Page.Title }}</a>
+ {{ .Count }} hosts
+              </li>
+   {{ end }}
+            </ul>
+          </p>
+          <hr />
+        </div>
+      </section>
 {{ end }}

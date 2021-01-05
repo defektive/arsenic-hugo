@@ -9,32 +9,27 @@
       <th>Open Ports</th>
     </tr>
   </thead>
-
  {{ range .Pages }}
-
     {{$recon := print .Dir  "/recon" }}
-
    {{ if (fileExists $recon) -}}
     {{$hostname := print .Dir  "/hostname" }}
-
-     <tr class="{{ if or (in .Params.flags "out of scope") (in .Params.flags "Out of Scope") (in .Params.flags "Out Of Scope") -}}out-of-scope{{ end -}} {{ if or (in .Params.flags "out of scope") (in .Params.flags "Unreviewed") (in .Params.flags "unreviewed") -}}unreviewed{{ end -}}">
-       <td>
-         <a href="{{.Permalink}}">
-             <span class="post-title">{{ replace (replace .Dir "hosts/" "") "/" "" }}</span>
-         </a>
-       </td>
-       <td>
+  <tr class="{{ if or (in .Params.flags "out of scope") (in .Params.flags "Out of Scope") (in .Params.flags "Out Of Scope") -}}out-of-scope{{ end -}} {{ if or (in .Params.flags "out of scope") (in .Params.flags "Unreviewed") (in .Params.flags "unreviewed") -}}unreviewed{{ end -}}">
+    <td>
+      <a href="{{.Permalink}}">
+        <span class="post-title">{{ replace (replace .Dir "hosts/" "") "/" "" }}</span>
+      </a>
+    </td>
+    <td>
           {{ if (fileExists $hostname) -}}
           {{readFile $hostname }}
-          {{ end }}
-         </td>
-       <td>
+          {{ end }}</td>
+    <td>
           {{ range .Params.flags }}
-              <span class="badge badge-secondary">{{ . }}</span>
+      <span class="badge badge-secondary">{{ . }}</span>
           {{ end }}
-        </td>
-        <td>{{if .Params.ports}}{{ delimit (.Params.ports) " " }}{{end}}</td>
-     </tr>
+    </td>
+    <td>{{if .Params.ports}}{{ delimit (.Params.ports) " " }}{{end}}</td>
+  </tr>
    {{ end }}
    {{ end }}
- </table>
+</table>

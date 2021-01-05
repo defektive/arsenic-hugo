@@ -1,97 +1,82 @@
 {{ define "page_header" }}
 <div class="container">
-		 <h2>Summary of {{ .Title }}</h2>
- </div>
+  <h2>Summary of {{ .Title }}</h2>
+</div>
 {{ end }}
-
-
 {{ define "main" }}
-	<div class="container">
-			<table class='table table-striped table-hover'>
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Severity</th>
-						<th>Title</th>
-						<th>Description</th>
-					</tr>
-				</thead>
-
-	      {{ $.Scratch.Set "counter" 0 }}
-				{{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
-					{{ if .Params.cvss.severity }}
-					{{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
-					<tr>
-						<td>
-            <a href="{{.Permalink}}">
-							#{{  $.Scratch.Get "counter"  }}
-						</a>
-					</td>
-						<td>{{ .Params.cvss.severity }}</td>
-						<td>{{ .Title | markdownify }}</td>
-						<td>{{ .Description  | markdownify }}</td>
-					</tr>
-					{{ end }}
-				{{ end }}
-			</table>
-	</div>
-
-	<div class="container">
-			<h2 id="findings">Findings</h2>
-
-      {{ $.Scratch.Set "counter" 0 }}
-			{{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
-				{{ if .Params.cvss.severity }}
-
-				{{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
-
-
-					<div>
-			      <h2 class="section-heading">#{{  $.Scratch.Get "counter"  }} {{ .Title | markdownify }}</h2>
-
-						{{$summary := print "content/" .Dir  "/summary.md" }}
-						{{$affected_assets := print "content/" .Dir "/affected_assets.md" }}
-						{{$recommendations := print "content/" .Dir "/recommendations.md" }}
-						{{$references := print "content/" .Dir "/references.md" }}
-
-						{{readFile $summary | markdownify}}
-
-						<h3>Affected Assets</h3>
-						{{readFile $affected_assets | markdownify}}
-
-						<h3>Recommendations</h3>
-						{{readFile $recommendations | markdownify}}
-
-						<h3>References</h3>
-						{{readFile $references | markdownify}}
-					</div>
-	        <!-- /.container -->
-					<hr>
-				{{ end }}
-			{{ end }}
-	</div>
-
-	{{$need_steps :=  true }}
-
-	{{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
-		{{ if .Title }}
-			{{$steps_to_reproduce := print "content/" .Dir  "/steps_to_reproduce.md" }}
-			{{ if (fileExists $steps_to_reproduce) -}}
-				{{ if (eq $need_steps true) }}
-					{{$need_steps = false}}
-	<div class="container">
-			<h2>Steps to reproduce</h2>
-				{{end}}
-
-				<div>
-        	<h2 class="section-heading">{{ .Title | markdownify }}</h2>
-					{{readFile $steps_to_reproduce | markdownify}}
-        </div>
-			{{- end}}
-		{{ end }}
-	{{ end }}
-
-	{{ if eq $need_steps false }}
-	</div>
-	{{end}}
+<div class="container">
+  <table class='table table-striped table-hover'>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Severity</th>
+        <th>Title</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    {{ $.Scratch.Set "counter" 0 }}
+    {{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
+      {{ if .Params.cvss.severity }}
+      {{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
+    <tr>
+      <td>
+        <a href="{{.Permalink}}">
+              #{{  $.Scratch.Get "counter"  }}</a>
+      </td>
+      <td>{{ .Params.cvss.severity }}</td>
+      <td>{{ .Title | markdownify }}</td>
+      <td>{{ .Description  | markdownify }}</td>
+    </tr>
+      {{ end }}
+    {{ end }}
+  </table>
+</div>
+<div class="container">
+  <h2 id="findings">Findings</h2>
+  {{ $.Scratch.Set "counter" 0 }}
+  {{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
+    {{ if .Params.cvss.severity }}
+      {{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
+  <div>
+    <h2 class="section-heading">#{{  $.Scratch.Get "counter"  }} {{ .Title | markdownify }}</h2>
+        {{$summary := print "content/" .Dir  "/summary.md" }}
+        {{$affected_assets := print "content/" .Dir "/affected_assets.md" }}
+        {{$recommendations := print "content/" .Dir "/recommendations.md" }}
+        {{$references := print "content/" .Dir "/references.md" }}
+        {{$steps_to_reproduce := print "content/" .Dir "/steps_to_reproduce.md" }}
+        {{readFile $summary | markdownify}}
+    <h3>Affected Assets</h3>
+        {{readFile $affected_assets | markdownify}}
+    <h3>Recommendations</h3>
+        {{readFile $recommendations | markdownify}}
+    <h3>References</h3>
+        {{readFile $references | markdownify}}
+        {{ if (fileExists $steps_to_reproduce) -}}
+    <h3>Steps to reproduce</h3>
+          {{readFile $steps_to_reproduce | markdownify}}
+        {{ end -}}
+  </div>
+  <hr>
+    {{ end }}
+  {{ end }}</div>
+  {{$need_steps :=  true }}
+  {{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
+    {{ if .Title }}
+      {{$steps_to_reproduce := print "content/" .Dir  "/steps_to_reproduce.md" }}
+      {{ if (fileExists $steps_to_reproduce) -}}
+        {{ if (eq $need_steps true) }}
+          {{$need_steps = false}}
+  <div class="container">
+    <h2>Steps to reproduce</h2>
+        {{end}}
+    <div>
+      <h2 class="section-heading">{{ .Title | markdownify }}</h2>
+          {{readFile $steps_to_reproduce | markdownify}}
+    </div>
+      {{- end}}
+    {{ end }}
+  {{ end }}
+  {{ if eq $need_steps false }}
+  </div>
+  {{end}}
 {{ end }}

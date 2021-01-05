@@ -1,55 +1,55 @@
 {{ define "page_header" }}
 <div class="container">
-		 <h2>Summary of {{ if ne .Title  "Flags" }}Flag{{end}} {{ .Title }}</h2>
- </div>
+  <h2>Summary of {{ if ne .Title  "Flags" }}Flag{{end}} {{ .Title }}</h2>
+</div>
 {{ end }}
-
 {{ define "main" }}
-	<div class="container">
-       {{ if .Content }}
-           <div class="content">{{ .Content }}</div>
-       {{ end }}
-
-			 {{ if ne .Title  "Flags" }}
-			 {{ partial "host-table.html" . }}
-			 {{ end }}
-
-			 <h3> Normal Flags</h3>
-			 <ul class="multi-column hostnames">
-		     {{ range .Site.Taxonomies.flags.ByCount }}
-				 {{ if not (in .Page.Title "::") }}
-           <li><a href="{{ .Page.Permalink }}">{{ .Page.Title }}</a> {{ .Count }} hosts</li>
-		     {{ end }}
-		     {{ end }}
-			 </ul>
-
-			{{ $scratch := newScratch }}
-			{{ range .Site.Taxonomies.flags.ByCount }}
-				{{ if in .Page.Title "::" }}
-					{{ $prefix := index (split .Page.Title "::") 0 }}
-	       	    {{ if not ($scratch.Get $prefix ) }}
-		       	    {{ if not ($scratch.Get "prefixes" ) }}
-	      	        {{ $scratch.Set "prefixes" (slice $prefix) }}
-								{{ else }}
-	      	        {{ $scratch.Add "prefixes" $prefix }}
-								{{ end }}
-      	        {{ $scratch.Set $prefix (slice .) }}
-	      	    {{ else }}
-	      	        {{ $scratch.Add $prefix .  }}
-	      	    {{ end }}
-				{{ end }}
-			{{ end }}
-
-			{{ if ($scratch.Get "prefixes") }}
-			{{ range sort ($scratch.Get "prefixes") }}
-				<h3> {{ . }} Flags</h3>
-				<ul class="multi-column hostnames">
-					{{ range $scratch.Get . }}
-
-					<li><a href="{{ .Page.Permalink }}">{{ .Page.Title }}</a> {{ .Count }} hosts</li>
- 			 {{ end }}
-				</ul>
-			{{ end }}
-			{{ end }}
-	</div>
+<div class="container">
+   {{ if .Content }}
+  <div class="content">{{ .Content }}</div>
+   {{ end }}
+   {{ if ne .Title  "Flags" }}
+    {{ partial "host-table.html" . }}
+   {{ end }}
+  <h3> Normal Flags</h3>
+  <ul class="multi-column hostnames">
+   {{ range .Site.Taxonomies.flags.ByCount }}
+     {{ if not (in .Page.Title "::") }}
+    <li>
+      <a href="{{ .Page.Permalink }}">{{ .Page.Title }}</a>
+ {{ .Count }} hosts
+    </li>
+     {{ end }}
+   {{ end }}
+  </ul>
+  {{ $scratch := newScratch }}
+  {{ range .Site.Taxonomies.flags.ByCount }}
+    {{ if in .Page.Title "::" }}
+      {{ $prefix := index (split .Page.Title "::") 0 }}
+      {{ if not ($scratch.Get $prefix ) }}
+        {{ if not ($scratch.Get "prefixes" ) }}
+          {{ $scratch.Set "prefixes" (slice $prefix) }}
+        {{ else }}
+          {{ $scratch.Add "prefixes" $prefix }}
+        {{ end }}
+        {{ $scratch.Set $prefix (slice .) }}
+      {{ else }}
+        {{ $scratch.Add $prefix .  }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  {{ if ($scratch.Get "prefixes") }}
+    {{ range sort ($scratch.Get "prefixes") }}
+  <h3> {{ . }} Flags</h3>
+  <ul class="multi-column hostnames">
+    {{ range $scratch.Get . }}
+    <li>
+      <a href="{{ .Page.Permalink }}">{{ .Page.Title }}</a>
+ {{ .Count }} hosts
+    </li>
+    {{ end }}
+  </ul>
+    {{ end }}
+  {{ end }}
+</div>
 {{ end }}

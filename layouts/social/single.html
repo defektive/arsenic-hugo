@@ -1,33 +1,30 @@
 {{ define "page_header" }}
 <div class="container">
-
-		 <h2>
-			 {{ .Name }}
-     </h2>
- </div>
+  <h2>
+   {{ .Name }}</h2>
+</div>
 {{ end }}
-
 {{ define "main" }}
 <div class="container">
-    Target Group: {{ .Params.TargetGroup }}<br >
-    Click Rate: {{ .Params.ClickRate }}<br >
-    View Rate: {{ .Params.ViewRate }}<br >
-    Emails Sent: {{ .Params.EmailsSent }}<br >
-    Emails Clicked: {{ .Params.EmailsClicked }}<br >
-    Emails Viewed: {{ .Params.EmailsViewed }}<br >
-
-		<h3>Details</h3>
-
+    Target Group: {{ .Params.TargetGroup }}
+  <br />
+    Click Rate: {{ .Params.ClickRate }}
+  <br />
+    View Rate: {{ .Params.ViewRate }}
+  <br />
+    Emails Sent: {{ .Params.EmailsSent }}
+  <br />
+    Emails Clicked: {{ .Params.EmailsClicked }}
+  <br />
+    Emails Viewed: {{ .Params.EmailsViewed }}
+  <br />
+  <h3>Details</h3>
   {{ .Content }}
-
-	<h3>Template</h3>
-
+  <h3>Template</h3>
   {{$templateFile := print "content/" .Dir "/template.html" }}
-	{{ if and (fileExists $templateFile)}}
-		{{$templatePath := print "/" .Dir "/template.html" }}
-		<iframe name="email-frame" src="{{ $templatePath }}" style="height: 600px; width: 100%"></iframe>
-	{{ end }}
-
+  {{ if and (fileExists $templateFile)}}
+  {{$templatePath := print "/" .Dir "/template.html" }}
+  <iframe name="email-frame" src="{{ $templatePath }}" style="height: 600px; width: 100%"></iframe>
+  {{ end }}
 </div>
-
 {{ end }}

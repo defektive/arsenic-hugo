@@ -1,30 +1,22 @@
 {{ define "page_header" }}
 <div class="container">
-		 <h2>Sweet Pipeline</h2>
- </div>
+  <h2>Sweet Pipeline</h2>
+</div>
 {{ end }}
-
 {{ define "main" }}
-	<div class="container">
-
-        {{ $scratch := newScratch }}
-      	<!-- to check against multiple target tags, add more tags next to "TARGETTAG" -->
-      	{{ range (where .Site.RegularPages "Params.flags" "intersect" (slice "PORTS" "unreviewed")) }}
-
-          {{ if and (in .Params.flags "PORTS" ) (in .Params.flags "unreviewed" ) }}
-
-       	    {{ if not ($scratch.Get "test") }}
-
-      	        {{ $scratch.Set "test" (slice .) }}
-      	    {{ else }}
-      	        {{ $scratch.Add "test" . }}
-      	    {{ end }}
-      	{{ end }}
-      	{{ end }}
-
-
-        {{ partial "host-table.html" ( dict "Pages" ($scratch.Get "test") ) }}
-
-		<hr />
-	</div>
+<div class="container">
+{{ $scratch := newScratch }}
+  <!-- to check against multiple target tags, add more tags next to "TARGETTAG" -->
+{{ range (where .Site.RegularPages "Params.flags" "intersect" (slice "PORTS" "unreviewed")) }}
+  {{ if and (in .Params.flags "PORTS" ) (in .Params.flags "unreviewed" ) }}
+    {{ if not ($scratch.Get "test") }}
+      {{ $scratch.Set "test" (slice .) }}
+    {{ else }}
+      {{ $scratch.Add "test" . }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ partial "host-table.html" ( dict "Pages" ($scratch.Get "test") ) }}
+  <hr />
+</div>
 {{ end }}

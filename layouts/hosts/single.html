@@ -1,222 +1,192 @@
-
 {{ define "page_header" }}
 {{ $ip := print (replace (replace .Dir "hosts/" "") "/" "") }}
 <div class="container">
-		 <h2>
-		 		{{ if in .Params.flags "Out of Scope" }}
-		 		THIS HOST IS OUT OF SCOPE!!!
-		 		{{ end }}
-     </h2>
-		 <h2>
+  {{ if in .Params.flags "Out of Scope" }}
+  <h2>
+     THIS HOST IS OUT OF SCOPE!!!</h2>
+   {{ end }}
+  <h2>
       {{ $ip }}
       {{$hostname := print .Dir  "/hostname" }}
       {{ if (fileExists $hostname) -}}
       {{readFile $hostname }}
-      {{ end }}
-     </h2>
- </div>
+      {{ end }}</h2>
+</div>
 {{ end }}
-
 {{ define "main" }}
 {{ $ip := print (replace (replace .Dir "hosts/" "") "/" "") }}
 <div class="container d-flex">
-	<div class="p-2 flex-fill">
-		Reviewed By: {{ .Params.reviewer }}<br />
-		IP: {{ $ip }}<br />
-	</div>
-
-
-    <div class="p-2 flex-fill">
-		Ports: <ul>
-		{{ range .Params.ports }}
-				<li><code>{{ . }}</code></li>
-		{{ end }}
-		</ul>
-		</div>
-
-    <div class="p-2 flex-fill">
-		Tags: <ul>
-		{{ range .Params.flags }}
-		{{$flag := print . }}
-				<li><a href="/flags/{{ $flag | urlize }}">{{ $flag }} </a></li>
-		{{ end }}
-		</ul>
-	</div>
-	</div>
-
-
-<div class="container">
-	{{ .Content }}
+  <div class="p-2 flex-fill">
+    Reviewed By: {{ .Params.reviewer }}
+    <br />
+    IP: {{ $ip }}
+    <br />
+  </div>
+  <div class="p-2 flex-fill">
+    Ports:
+    <ul>
+    {{ range .Params.ports }}
+      <li>
+        <code>{{ . }}</code>
+      </li>
+    {{ end }}
+    </ul>
+  </div>
+  <div class="p-2 flex-fill">
+    Tags:
+    <ul>
+    {{ range .Params.flags }}
+    {{$flag := print . }}
+      <li>
+        <a href="/flags/{{ $flag | urlize }}">{{ $flag }} </a>
+      </li>
+    {{ end }}
+    </ul>
+  </div>
 </div>
-
 <div class="container">
-
-	  {{$lootDir := print "content/" .Dir "/loot/" }}
-		{{ if and (fileExists $lootDir)}}
-
-				<h3>Loot</h3>
-	<div class="accordion" id="loot-accordian">
-
-				{{$credentials := print $lootDir "/passwords/credentials.txt" }}
-				{{ if and (fileExists $credentials)}}
-
-	  <div class="card">
-	    <div class="card-header" id="headingOne">
-	      <h2 class="mb-0">
-	        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-	           Valid credentials
-	        </button>
-	      </h2>
-	    </div>
-
-	    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#loot-accordian">
-	      <div class="card-body">
-					<pre>{{readFile $credentials }}</pre>
-	      </div>
-	    </div>
-	  </div>
-		{{ end }}
-
-		{{$keys := print $lootDir "/keys/" }}
-		{{ if and (fileExists $keys)}}
-	  <div class="card">
-	    <div class="card-header" id="headingTwo">
-	      <h2 class="mb-0">
-	        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-						Keys
-	        </button>
-	      </h2>
-	    </div>
-	    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#loot-accordian">
-	      <div class="card-body">
-					{{ range (readDir $keys) }}
-					{{ .Name }}
-					<pre>{{readFile (print $keys .Name) }}</pre>
-					{{ end }}
-	      </div>
-	    </div>
-	  </div>
-		{{ end }}
-
-	{{ range $index, $element := (readDir $lootDir) }}
-		{{$lootFile := print $lootDir .Name  }}
-		{{ if and (ne $element.Name "passwords") (ne $element.Name "keys") }}
-	  <div class="card">
-	    <div class="card-header" id="headingThree{{ $index }}">
-	      <h2 class="mb-0">
-	        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree{{ $index }}" aria-expanded="false" aria-controls="collapseThree">
-	          {{ $element.Name }}
-	        </button>
-	      </h2>
-	    </div>
-	    <div id="collapseThree{{ $index }}" class="collapse" aria-labelledby="headingThree" data-parent="#loot-accordian">
-	      <div class="card-body">
-					<pre>{{readFile $lootFile }}</pre>
-	      </div>
-	    </div>
-	  </div>
-		{{ end }}
-	{{ end }}
-	</div>
-{{ end }}
-
-  {{$reconDir := print "content/" .Dir "/recon/" }}
-	{{ if and (fileExists $reconDir)}}
-		<h3>Recon</h3>
-		<div class="accordion" id="recon-accordian">
-
-		{{ $.Scratch.Set "counter" 0 }}
-	  {{ range $index, $element := (readDir $reconDir) }}
-			{{ if (in $element.Name "aquatone") }}
-				{{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
-				{{$aquatonePath := print "/" ( replace $reconDir "content/" "" ) "/" $element.Name  "/aquatone_report.html#/pages/single" }}
-				{{ if eq ($.Scratch.Get "counter") 1 }}
-				<div class="card">
-					<div class="card-header" id="recon-heading-aquatone">
-						<h2 class="mb-0">
-							<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#recon-collapse-aquatone" aria-expanded="true" aria-controls="recon-collapse-aquatone">
-								 Aquatone
-							</button>
-						</h2>
-					</div>
-
-					<div id="recon-collapse-aquatone" class="collapse show" aria-labelledby="recon-heading-aquatone" data-parent="#recon-accordian">
-						<div class="card-body">
-				{{ end }}
-							<a href="{{ $aquatonePath }}" target="aquatone-frame">{{ $element.Name }}</a>
-			{{ end }}
-		{{ end }}
-
-		{{ $.Scratch.Set "counter" 0 }}
-	  {{ range $index, $element := (readDir $reconDir) }}
-			{{ if (in $element.Name "aquatone") }}
-				{{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
-				{{$aquatonePath := print "/" ( replace $reconDir "content/" "" ) "/" $element.Name  "/aquatone_report.html#/pages/single" }}
-				{{ if eq ($.Scratch.Get "counter") 1 }}
-							<iframe name="aquatone-frame" src="{{ $aquatonePath }}" style="height: 500px; width: 100%"></iframe>
-						</div>
-					</div>
-				</div>
-				{{ end }}
-			{{ end }}
-		{{ end }}
-
-		{{$services_xml := print "content/" .Dir "/recon/" $ip  "_services.xml" }}
-		{{ if or (fileExists $services_xml) }}
-			{{$services_xml_path := print "/" .Dir "/recon/" $ip  "_services.xml" }}
-			<div class="card">
-				<div class="card-header" id="recon-heading-nmap">
-					<h2 class="mb-0">
-						<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#recon-collapse-nmap" aria-expanded="true" aria-controls="recon-collapse-nmap">
-							 nmap xml
-						</button>
-					</h2>
-				</div>
-
-		    <div id="recon-collapse-nmap" class="collapse show" aria-labelledby="recon-heading-nmap" data-parent="#recon-accordian">
-		      <div class="card-body">
-					{{ if and (fileExists $services_xml)}}
-						<a href="{{ $services_xml_path }}" target="nmap-frame">Mage</a>
-					{{ end }}
-
-					<iframe name="nmap-frame" src="{{ if and (fileExists $services_xml) -}}
-					{{ $services_xml_path -}}
-					{{ end -}}" style="height: 500px; width: 100%"></iframe>
-					</div>
-				</div>
-			</div>
-		{{ end }}
-
-	  {{ range $index, $element := (readDir $reconDir) }}
-			{{ if and (ne $element.Name "nmap-punched.gnmap") (ne $element.Name "nmap-punched.xml") (not (in $element.Name "aquatone")) (not (in $element.Name "ignore_"))  }}
-
-			<div class="card">
-		    <div class="card-header" id="recon-heading-{{ $index }}">
-		      <h2 class="mb-0">
-		        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#recon-collapse-{{ $index }}" aria-expanded="false" aria-controls="recon-collapse-{{ $index }}">
-		          {{ $element.Name }}
-		        </button>
-		      </h2>
-		    </div>
-
-		    <div id="recon-collapse-{{ $index }}" class="collapse" aria-labelledby="recon-heading-{{ $index }}" data-parent="#recon-accordian">
-		      <div class="card-body">
-
-						{{$reconFile := print $reconDir $element.Name  }}
-						{{ if and (in $reconFile ".html") }}
-							<a href="{{ replace $reconFile "content/" "/" }}">{{ $element.Name }}</a>
-						{{end}}
-
-						<pre>{{readFile $reconFile }}</pre>
-		      </div>
-		    </div>
-		  </div>
-		  {{ end }}
-	  {{ end }}
+  {{ .Content }}
+</div>
+<div class="container">
+    {{$lootDir := print "content/" .Dir "/loot/" }}
+    {{ if and (fileExists $lootDir)}}
+  <h3>Loot</h3>
+  <div class="accordion" id="loot-accordian">
+        {{$credentials := print $lootDir "/passwords/credentials.txt" }}
+        {{ if and (fileExists $credentials)}}
+    <div class="card">
+      <div class="card-header" id="headingOne">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+             Valid credentials</button>
+        </h2>
+      </div>
+      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#loot-accordian">
+        <div class="card-body">
+          <pre>{{readFile $credentials }}</pre>
+        </div>
+      </div>
+    </div>
+    {{ end }}
+    {{$keys := print $lootDir "/keys/" }}
+    {{ if and (fileExists $keys)}}
+    <div class="card">
+      <div class="card-header" id="headingTwo">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            Keys</button>
+        </h2>
+      </div>
+      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#loot-accordian">
+        <div class="card-body">
+          {{ range (readDir $keys) }}
+          {{ .Name }}
+          <pre>{{readFile (print $keys .Name) }}</pre>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+    {{ end }}
+  {{ range $index, $element := (readDir $lootDir) }}
+    {{$lootFile := print $lootDir .Name  }}
+    {{ if and (ne $element.Name "passwords") (ne $element.Name "keys") }}
+    <div class="card">
+      <div class="card-header" id="headingThree{{ $index }}">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree{{ $index }}" aria-expanded="false" aria-controls="collapseThree">
+            {{ $element.Name }}</button>
+        </h2>
+      </div>
+      <div id="collapseThree{{ $index }}" class="collapse" aria-labelledby="headingThree" data-parent="#loot-accordian">
+        <div class="card-body">
+          <pre>{{readFile $lootFile }}</pre>
+        </div>
+      </div>
+    </div>
+    {{ end }}
   {{ end }}
-
+  </div>
+{{ end }}
+  {{$reconDir := print "content/" .Dir "/recon/" }}
+  {{ if and (fileExists $reconDir)}}
+  <h3>Recon</h3>
+  <div class="accordion" id="recon-accordian">
+    {{ $.Scratch.Set "counter" 0 }}
+    {{ range $index, $element := (readDir $reconDir) }}
+      {{ if (in $element.Name "aquatone") }}
+        {{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
+        {{$aquatonePath := print "/" ( replace $reconDir "content/" "" ) "/" $element.Name  "/aquatone_report.html#/pages/single" }}
+        {{ if eq ($.Scratch.Get "counter") 1 }}
+    <div class="card">
+      <div class="card-header" id="recon-heading-aquatone">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#recon-collapse-aquatone" aria-expanded="true" aria-controls="recon-collapse-aquatone">
+                 Aquatone</button>
+        </h2>
+      </div>
+      <div id="recon-collapse-aquatone" class="collapse show" aria-labelledby="recon-heading-aquatone" data-parent="#recon-accordian">
+        <div class="card-body">
+        {{ end }}
+          <a href="{{ $aquatonePath }}" target="aquatone-frame">{{ $element.Name }}</a>
+      {{ end }}
+    {{ end }}
+    {{ $.Scratch.Set "counter" 0 }}
+    {{ range $index, $element := (readDir $reconDir) }}
+      {{ if (in $element.Name "aquatone") }}
+        {{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
+        {{$aquatonePath := print "/" ( replace $reconDir "content/" "" ) "/" $element.Name  "/aquatone_report.html#/pages/single" }}
+        {{ if eq ($.Scratch.Get "counter") 1 }}
+          <iframe name="aquatone-frame" src="{{ $aquatonePath }}" style="height: 500px; width: 100%"></iframe>
+        </div>
+      </div>
+    </div>
+        {{ end }}
+      {{ end }}
+    {{ end }}
+    {{$services_xml := print "content/" .Dir "/recon/nmap-" $ip  "_services.xml" }}
+    {{ if or (fileExists $services_xml) }}
+      {{$services_xml_path := print "/" .Dir "/recon/nmap-" $ip  "_services.xml" }}
+    <div class="card">
+      <div class="card-header" id="recon-heading-nmap">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#recon-collapse-nmap" aria-expanded="true" aria-controls="recon-collapse-nmap">
+               nmap xml</button>
+        </h2>
+      </div>
+      <div id="recon-collapse-nmap" class="collapse show" aria-labelledby="recon-heading-nmap" data-parent="#recon-accordian">
+        <div class="card-body">
+          {{ if and (fileExists $services_xml)}}
+          <a href="{{ $services_xml_path }}" target="nmap-frame">Mage</a>
+          {{ end }}
+          <iframe name="nmap-frame" src="{{ if and (fileExists $services_xml) -}}
+          {{ $services_xml_path -}}
+          {{ end -}}" style="height: 500px; width: 100%"></iframe>
+        </div>
+      </div>
+    </div>
+    {{ end }}
+    {{ range $index, $element := (readDir $reconDir) }}
+      {{ if and (ne $element.Name "nmap-punched.gnmap") (ne $element.Name "nmap-punched.xml") (not (in $element.Name "aquatone")) (not (in $element.Name "ignore_"))  }}
+    <div class="card">
+      <div class="card-header" id="recon-heading-{{ $index }}">
+        <h2 class="mb-0">
+          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#recon-collapse-{{ $index }}" aria-expanded="false" aria-controls="recon-collapse-{{ $index }}">
+              {{ $element.Name }}</button>
+        </h2>
+      </div>
+      <div id="recon-collapse-{{ $index }}" class="collapse" aria-labelledby="recon-heading-{{ $index }}" data-parent="#recon-accordian">
+        <div class="card-body">
+            {{$reconFile := print $reconDir $element.Name  }}
+            {{ if and (in $reconFile ".html") }}
+          <a href="{{ replace $reconFile "content/" "/" }}">{{ $element.Name }}</a>
+            {{end}}
+          <pre>{{readFile $reconFile }}</pre>
+        </div>
+      </div>
+    </div>
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  </div>
 </div>
-</div>
-</div>
-
 {{ end }}

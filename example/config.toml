@@ -8,7 +8,6 @@ PygmentsStyle = "monokai"
 
 paginate  = 0
 rssLimit  = 0  # Maximum number of items in the RSS feed.
-
 [menu]
   [[menu.main]]
     identifier = "findings"
@@ -27,6 +26,10 @@ rssLimit  = 0  # Maximum number of items in the RSS feed.
     name       = "Hostnames"
     url        = "hostnames/"
   [[menu.main]]
+    identifier = "root_domains"
+    name       = "Root Domains"
+    url        = "root_domains/"
+  [[menu.main]]
     identifier = "flags"
     name       = "Flags"
     url        = "flags/"
@@ -39,6 +42,7 @@ rssLimit  = 0  # Maximum number of items in the RSS feed.
     port = "ports"
     flag = "flags"
     hostname = "hostnames"
+    root_domain = "root_domains"
     reviewer = "reviewer"
 #
 # Personalization params
@@ -64,16 +68,16 @@ rssLimit  = 0  # Maximum number of items in the RSS feed.
     header_link_hover_color="rgb(51, 51, 51)"
 
 [[params.reportSections]]
+  label = "Scope"
+  file = "scope"
+
+[[params.reportSections]]
   label = "Foreword"
   file = "foreword"
 
 [[params.reportSections]]
   label = "Executive Summary"
   file = "executive_summary"
-
-[[params.reportSections]]
-  label = "Scope"
-  file = "scope"
 
 [[params.reportSections]]
   label = "Attack Narrative"
@@ -129,3 +133,4 @@ rssLimit  = 0  # Maximum number of items in the RSS feed.
 
   [services.twitter]
     disableInlineCSS = true
+
