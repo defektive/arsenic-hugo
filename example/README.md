@@ -1,30 +1,27 @@
-### Default Op README.md
+## Default Op README.md
 
 This file should live in `report/sections/README.md` and be symlinked to the op root directory
 
-#### Curious how to get started?
+### Getting Started
 
-- edit config.toml
-- create a scope file
-- run some commands
-- browse data
+- Update config.toml with desired information
 
-```bash
-echo example.com > scope-domains.txt
-ar-recon-discover-domains
-```
+#### Create a Scope
 
-```bash
-echo 192.168.0.1/24 > scope-ips.txt
-ar-recon-discover-hosts
-```
+- scope-domains-client-provided.txt
+- scope-domains-manually-discovered.txt
+- scope-ips-client-provided.txt
+- scope-ips-manually-discovered.txt
 
-Or if you want to that and more you can run
+When running commands typically the glob `scope-domains-*` is used to get a list of domain, and `scope-ips-*` is used to get valid IPs.
 
-```bash
-echo example.com > scope-domains.txt
-echo 192.168.0.1/24 > scope-ips.txt
-arsenic
-```
+#### Discovery Recon
+
+Now we can run `ar-passive-recon`. this will do some basic enumeration about what domains the scope contains and hopefully find some more sub domains.
+
+After we've gathered a list of domains, we can check for SSL certs and see what domains they have using `ar-recon-ssl-certs`.
+
+We should take amoment and add any undesirable domains to `blacklist-domains.txt` and any undesirable IPs to `blacklist-ips.txt`. This will prevent them from being included in most commands...
+
 
 See [arsenic](https://github.com/defektive/arsenic) for more information

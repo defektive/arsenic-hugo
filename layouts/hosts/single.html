@@ -143,44 +143,30 @@
         {{ end }}
       {{ end }}
     {{ end }}
-    {{$services_xml := print "content/" .Dir "/recon/nmap-" $ip  "_services.xml" }}
-    {{ if or (fileExists $services_xml) }}
-      {{$services_xml_path := print "/" .Dir "/recon/nmap-" $ip  "_services.xml" }}
-    <div class="card">
-      <div class="card-header" id="recon-heading-nmap">
-        <h2 class="mb-0">
-          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#recon-collapse-nmap" aria-expanded="true" aria-controls="recon-collapse-nmap">
-               nmap xml</button>
-        </h2>
-      </div>
-      <div id="recon-collapse-nmap" class="collapse show" aria-labelledby="recon-heading-nmap" data-parent="#recon-accordian">
-        <div class="card-body">
-          {{ if and (fileExists $services_xml)}}
-          <a href="{{ $services_xml_path }}" target="nmap-frame">Mage</a>
-          {{ end }}
-          <iframe name="nmap-frame" src="{{ if and (fileExists $services_xml) -}}
-          {{ $services_xml_path -}}
-          {{ end -}}" style="height: 500px; width: 100%"></iframe>
-        </div>
-      </div>
-    </div>
-    {{ end }}
     {{ range $index, $element := (readDir $reconDir) }}
-      {{ if and (ne $element.Name "nmap-punched.gnmap") (ne $element.Name "nmap-punched.xml") (not (in $element.Name "aquatone")) (not (in $element.Name "ignore_"))  }}
+      {{ if and (not (in $element.Name ".gnmap")) (not (in $element.Name "aquatone")) (not (in $element.Name "ignore_"))  }}
+      {{$reconFile := print $reconDir $element.Name  }}
     <div class="card">
       <div class="card-header" id="recon-heading-{{ $index }}">
         <h2 class="mb-0">
           <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#recon-collapse-{{ $index }}" aria-expanded="false" aria-controls="recon-collapse-{{ $index }}">
-              {{ $element.Name }}</button>
+              {{ $element.Name }}
+              {{ if or (in $reconFile ".html") (in $reconFile ".xml") }}
+              <a href="{{ replace $reconFile "content/" "/" }}" class="">
+                <i class="fa fa-lg fa-link" aria-hidden="true"></i>
+              </a>
+              {{end}}
+            </button>
         </h2>
       </div>
       <div id="recon-collapse-{{ $index }}" class="collapse" aria-labelledby="recon-heading-{{ $index }}" data-parent="#recon-accordian">
         <div class="card-body">
-            {{$reconFile := print $reconDir $element.Name  }}
-            {{ if and (in $reconFile ".html") }}
-          <a href="{{ replace $reconFile "content/" "/" }}">{{ $element.Name }}</a>
-            {{end}}
+
+          {{ if and (in $reconFile ".xml") (in $reconFile "nmap") }}
+          <iframe name="nmap-frame" src="{{ replace $reconFile "content/" "/" }}" style="height: 500px; width: 100%"></iframe>
+          {{ else }}
           <pre>{{readFile $reconFile }}</pre>
+          {{end}}
         </div>
       </div>
     </div>
