@@ -408,7 +408,7 @@ a.pull-right {
 .risk-table.impact-CRITICAL td.risk-col-5.risk-rating-0,
 .risk-table.impact-HIGH td.risk-col-4.risk-rating-0,
 .risk-table.impact-MEDIUM td.risk-col-3.risk-rating-0,
-.risk-table.impact-LOW td.risk-col-3.risk-rating-0,
+.risk-table.impact-LOW td.risk-col-2.risk-rating-0,
 .risk-table.impact-INFORMATIONAL td.risk-col-1.risk-rating-0 {
   background: #B1D5F1;
 }
