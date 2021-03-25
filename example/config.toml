@@ -18,17 +18,21 @@ rssLimit  = 0  # Maximum number of items in the RSS feed.
     name       = "Hosts"
     url        = "hosts/"
   [[menu.main]]
-    identifier = "ports"
-    name       = "Ports"
-    url        = "ports/"
+    identifier = "TCPPorts"
+    name       = "TCPPorts"
+    url        = "tcpports/"
+  [[menu.main]]
+    identifier = "UDPPorts"
+    name       = "UDPPorts"
+    url        = "udpports/"
   [[menu.main]]
     identifier = "hostnames"
     name       = "Hostnames"
     url        = "hostnames/"
   [[menu.main]]
-    identifier = "root_domains"
+    identifier = "rootdomains"
     name       = "Root Domains"
-    url        = "root_domains/"
+    url        = "rootdomains/"
   [[menu.main]]
     identifier = "flags"
     name       = "Flags"
@@ -39,11 +43,13 @@ rssLimit  = 0  # Maximum number of items in the RSS feed.
     url        = "pipeline/"
 
 [taxonomies]
-    port = "ports"
-    flag = "flags"
-    hostname = "hostnames"
-    root_domain = "root_domains"
-    reviewer = "reviewer"
+    Port = "Ports"
+    Flag = "Flags"
+    Hostname = "Hostnames"
+    RootDomains = "RootDomains"
+    Reviewer = "Reviewer"
+    TCPPorts = "TCPPorts"
+    UDPPorts = "UDPPorts"
 #
 # Personalization params
 #
@@ -133,4 +139,3 @@ rssLimit  = 0  # Maximum number of items in the RSS feed.
 
   [services.twitter]
     disableInlineCSS = true
-
