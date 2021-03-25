@@ -3,33 +3,37 @@
 <table class='table table-striped table-hover'>
   <thead>
     <tr>
-      <th>IP</th>
-      <th>Hostname</th>
+      <th>Name</th>
+      <th>Hostnames</th>
+      <th>IP Addresses</th>
       <th>Flags</th>
       <th>Open Ports</th>
     </tr>
   </thead>
- {{ range .Pages }}
-    {{$recon := print .Dir  "/recon" }}
-   {{ if (fileExists $recon) -}}
-    {{$hostname := print .Dir  "/hostname" }}
-  <tr class="{{ if or (in .Params.flags "out of scope") (in .Params.flags "Out of Scope") (in .Params.flags "Out Of Scope") -}}out-of-scope{{ end -}} {{ if or (in .Params.flags "out of scope") (in .Params.flags "Unreviewed") (in .Params.flags "unreviewed") -}}unreviewed{{ end -}}">
+  {{ range .Pages }}
+  {{ if strings.HasSuffix .Path "00_metadata.md"}}
+  <tr class="{{ if or (in .Params.flags "out of scope") (in .Params.flags "Out of Scope") (in .Params.flags "Out Of Scope") -}}out-of-scope{{ end -}} {{ if or (in .Params.flags "Unreviewed")  -}}Unreviewed{{ end -}}">
     <td>
       <a href="{{.Permalink}}">
-        <span class="post-title">{{ replace (replace .Dir "hosts/" "") "/" "" }}</span>
+        <span class="post-title">{{ .Params.Name }}</span>
       </a>
     </td>
     <td>
-          {{ if (fileExists $hostname) -}}
-          {{readFile $hostname }}
-          {{ end }}</td>
-    <td>
-          {{ range .Params.flags }}
-      <span class="badge badge-secondary">{{ . }}</span>
-          {{ end }}
+      {{ len .Params.Hostnames }}
     </td>
-    <td>{{if .Params.ports}}{{ delimit (.Params.ports) " " }}{{end}}</td>
+    <td>
+      {{ len .Params.IPAddresses }}
+    </td>
+    <td>
+      {{ range .Params.Flags }}
+      <span class="badge badge-secondary">{{ . }}</span>
+      {{ end }}
+    </td>
+    <td>
+      {{if .Params.TCPPorts}}TCP: {{ delimit (.Params.TCPPorts) " " }}{{end}}
+      {{if .Params.UDPPorts}}UDP: {{ delimit (.Params.UDPPorts) " " }}{{end}}
+    </td>
   </tr>
-   {{ end }}
-   {{ end }}
+  {{ end }}
+  {{ end }}
 </table>

@@ -1,0 +1,23 @@
+{{ define "page_header" }}
+<div class="container">
+  <h2>Summary of {{ if ne .Title  "UDPPorts" }}Port{{end}} {{ .Title }}</h2>
+</div>
+{{ end }}
+{{ define "main" }}
+<div class="container">
+{{ if .Content }}
+  <div class="content">{{ .Content }}</div>
+{{ end }}
+{{ if ne .Title  "Ports" }}
+  {{ partial "host-table.html" . }}
+{{ end }}
+  <ul class="multi-column ports">
+  {{ range .Site.Taxonomies.UDPPorts }}
+    <li>
+      <a href="{{ .Page.Permalink }}">{{ .Page.Title }}</a>
+      {{ .Count }} hosts
+    </li>
+  {{ end }}
+  </ul>
+</div>
+{{ end }}

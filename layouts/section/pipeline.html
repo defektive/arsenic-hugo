@@ -7,8 +7,8 @@
 <div class="container">
 {{ $scratch := newScratch }}
   <!-- to check against multiple target tags, add more tags next to "TARGETTAG" -->
-{{ range (where .Site.RegularPages "Params.flags" "intersect" (slice "PORTS" "unreviewed")) }}
-  {{ if and (in .Params.flags "PORTS" ) (in .Params.flags "unreviewed" ) }}
+{{ range (where .Site.RegularPages "Params.flags" "intersect" (slice "OpenPorts" "Unreviewed")) }}
+  {{ if and (in .Params.flags "OpenPorts" ) (in .Params.flags "Unreviewed" ) }}
     {{ if not ($scratch.Get "test") }}
       {{ $scratch.Set "test" (slice .) }}
     {{ else }}

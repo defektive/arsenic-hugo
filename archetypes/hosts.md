@@ -1,6 +1,11 @@
-+++
-Description = ""
-Keywords = []
-Tags = []
-Ports = []
-+++
+{
+  "Name": "",
+  "Hostname": [],
+  "RootDomains": [],
+  "IPAddresses": [],
+  "Flags": [],
+  "UserFlags": [],
+  "TCPPorts":[],
+  "UDPPorts":[],
+  "services": []
+}

@@ -1,41 +1,57 @@
 {{ define "page_header" }}
-{{ $ip := print (replace (replace .Dir "hosts/" "") "/" "") }}
 <div class="container">
-  {{ if in .Params.flags "Out of Scope" }}
-  <h2>
-     THIS HOST IS OUT OF SCOPE!!!</h2>
-   {{ end }}
-  <h2>
-      {{ $ip }}
-      {{$hostname := print .Dir  "/hostname" }}
-      {{ if (fileExists $hostname) -}}
-      {{readFile $hostname }}
-      {{ end }}</h2>
+  <h2>{{ .Params.Name }}</h2>
 </div>
 {{ end }}
+
 {{ define "main" }}
 {{ $ip := print (replace (replace .Dir "hosts/" "") "/" "") }}
 <div class="container d-flex">
   <div class="p-2 flex-fill">
-    Reviewed By: {{ .Params.reviewer }}
-    <br />
-    IP: {{ $ip }}
-    <br />
-  </div>
-  <div class="p-2 flex-fill">
-    Ports:
-    <ul>
-    {{ range .Params.ports }}
-      <li>
+    <dl>
+      <dt>IP Addresses</dt>
+      {{ range .Params.IPAddresses }}
+      <dd>
         <code>{{ . }}</code>
-      </li>
-    {{ end }}
-    </ul>
+      </dd>
+      {{ end }}
+    </dl>
   </div>
   <div class="p-2 flex-fill">
+
+    <dl>
+      <dt>Root Domains</dt>
+      {{ range .Params.RootDomains }}
+      <dd>
+        <code>{{ . }}</code>
+      </dd>
+      {{ end }}
+      <dt>Hostnames</dt>
+      {{ range .Params.Hostnames }}
+      <dd>
+        <code>{{ . }}</code>
+      </dd>
+      {{ end }}
+    </dl>
+  </div>
+  <div class="p-2 flex-fill">
+    <dl>
+      <dt>TCP ports</dt>
+      {{ range .Params.TCPPorts }}
+      <dd>
+        <code>{{ . }}</code>
+      </dd>
+      {{ end }}
+      <dt>UDP ports</dt>
+      {{ range .Params.UDPPorts }}
+      <dd>
+        <code>{{ . }}</code>
+      </dd>
+      {{ end }}
+    </dl>
     Tags:
     <ul>
-    {{ range .Params.flags }}
+    {{ range .Params.Flags }}
     {{$flag := print . }}
       <li>
         <a href="/flags/{{ $flag | urlize }}">{{ $flag }} </a>
@@ -45,7 +61,12 @@
   </div>
 </div>
 <div class="container">
-  {{ .Content }}
+  {{$readme := print "content/" .Dir "/README.md" }}
+  {{ if and (fileExists $readme)}}
+
+  {{ (print $readme) | readFile | markdownify }}
+
+  {{ end }}
 </div>
 <div class="container">
     {{$lootDir := print "content/" .Dir "/loot/" }}

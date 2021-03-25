@@ -13,7 +13,7 @@
    {{ end }}
   <h3> Normal Flags</h3>
   <ul class="multi-column hostnames">
-   {{ range .Site.Taxonomies.flags.ByCount }}
+   {{ range .Site.Taxonomies.Flags.ByCount }}
      {{ if not (in .Page.Title "::") }}
     <li>
       <a href="{{ .Page.Permalink }}">{{ .Page.Title }}</a>
@@ -23,7 +23,7 @@
    {{ end }}
   </ul>
   {{ $scratch := newScratch }}
-  {{ range .Site.Taxonomies.flags.ByCount }}
+  {{ range .Site.Taxonomies.Flags.ByCount }}
     {{ if in .Page.Title "::" }}
       {{ $prefix := index (split .Page.Title "::") 0 }}
       {{ if not ($scratch.Get $prefix ) }}
