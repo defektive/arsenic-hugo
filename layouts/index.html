@@ -274,7 +274,7 @@
           <h4>CVSS and CWEs</h4>
           <ul>
             <li>
-              <a href="https://www.first.org/cvss/calculator/3.0#{{ .Params.cvss.vector }}">https://www.first.org/cvss/calculator/3.0#{{ .Params.cvss.vector }}</a>
+              <a href="https://www.first.org/cvss/calculator/3.0#" data-vector="{{ .Params.cvss.vector }}">https://www.first.org/cvss/calculator/3.0#{{ .Params.cvss.vector }}</a>
             </li>
   {{ if len (.Params.cweRefs) }}
   {{ range $cweI, $cwe := .Params.cweRefs }}
