@@ -5,12 +5,14 @@
 </div>
 {{ end }}
 {{ define "main" }}
+{{ $clickRate := mul (div (float .Params.EmailsClicked) (float .Params.EmailsSent)) 100 }}
+{{ $viewRate := mul (div (float .Params.EmailsViewed) (float .Params.EmailsSent)) 100 }}
 <div class="container">
     Target Group: {{ .Params.TargetGroup }}
   <br />
-    Click Rate: {{ .Params.ClickRate }}
+    Click Rate: {{ printf "%.2f" $clickRate }}%
   <br />
-    View Rate: {{ .Params.ViewRate }}
+    View Rate: {{ printf "%.2f" $viewRate }}%
   <br />
     Emails Sent: {{ .Params.EmailsSent }}
   <br />
