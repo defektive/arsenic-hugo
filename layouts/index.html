@@ -172,7 +172,7 @@
             <th>Clicks</th>
           </tr>
         </thead>
-   {{ range where .Site.Pages "Section" "social"   }}
+   {{ range where (where .Site.Pages "Section" "social") ".Path" "!=" "social" }}
         <tr>
           <td>
             <a href="{{.Permalink}}">
@@ -184,7 +184,7 @@
           <td>
         {{ .Params.EmailsSent }}</td>
           <td>
-        {{ .Params.EmailsViewed }}</td>
+        {{ .Params.EmailsClicked }}</td>
         </tr>
   {{ end }}
       </table>
