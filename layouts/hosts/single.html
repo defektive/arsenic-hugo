@@ -8,6 +8,7 @@
 {{ $ip := print (replace (replace .Dir "hosts/" "") "/" "") }}
 <div class="container d-flex">
   <div class="p-2 flex-fill">
+    Reviewed By: {{ .Params.ReviewedBy }}
     <dl>
       <dt>IP Addresses</dt>
       {{ range .Params.IPAddresses }}
