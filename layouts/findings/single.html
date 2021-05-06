@@ -1,37 +1,58 @@
-{{ define "main" }}
-  {{ if .Params.cvss.severity }}
+{{ partial "header.html" . }}
+
+{{ .Content }}
+
+
 <div class="container">
-  <h2 class="section-heading">{{ .Title | markdownify }}</h2>
-  <pre>
+<h2 class="section-heading">{{ .Title | markdownify }}</h2>
+<pre>
 Description: {{ .Params.description }}
 CVSS: {{ .Params.cvss.score }}
 CVSS Vector: {{ .Params.cvss.vector }}
 CWEs:
 {{ range .Params.cweRefs }}
- - {{.}}
+- {{.}}
 {{ end }}
 Affected Hosts:
 {{ range .Params.affectedHosts }}
- - {{.}}
+- {{.}}
 {{ end }}
 </pre>
-      {{$summary := print "content/" .Dir "/01-summary.md" }}
-      {{$affected_assets := print "content/" .Dir "/02-affected_assets.md" }}
-      {{$recommendations := print "content/" .Dir "/03-recommendations.md" }}
-      {{$references := print "content/" .Dir "/04-references.md" }}
-      {{readFile $summary | markdownify}}
-  <h3>Affected Assets</h3>
-      {{readFile $affected_assets | markdownify}}
-  <h3>Recommendations</h3>
-      {{readFile $recommendations | markdownify}}
-  <h3>References</h3>
-      {{readFile $references | markdownify}}
-      {{$steps_to_reproduce := print "content/" .Dir "/05-steps_to_reproduce.md" }}
-      {{ if (fileExists $steps_to_reproduce) -}}
-  <h3>Steps to reproduce</h3>
-      {{readFile $steps_to_reproduce | markdownify}}
-      {{- end}}
-  <!-- /.container -->
-  <hr></div>
-  {{ end }}
-{{ end }}
+		{{$summary := print "content/" .Dir "/01-summary.md" }}
+		{{$affected_assets := print "content/" .Dir "/02-affected_assets.md" }}
+		{{$recommendations := print "content/" .Dir "/03-recommendations.md" }}
+		{{$references := print "content/" .Dir "/04-references.md" }}
+		{{readFile $summary | markdownify}}
+<h3>Affected Assets</h3>
+		{{readFile $affected_assets | markdownify}}
+<h3>Recommendations</h3>
+		{{readFile $recommendations | markdownify}}
+<h3>References</h3>
+		{{readFile $references | markdownify}}
+		{{$steps_to_reproduce := print "content/" .Dir "/05-steps_to_reproduce.md" }}
+		<h4>CVSS and CWEs</h4>
+		<ul>
+			<li>
+				<a href="https://www.first.org/cvss/calculator/3.0#" data-vector="{{ .Params.cvss.vector }}">https://www.first.org/cvss/calculator/3.0#{{ .Params.cvss.vector }}</a>
+			</li>
+	{{ range $cweI, $cwe := .Params.cweRefs }}
+			<li>
+				<a href="https://cwe.mitre.org/data/definitions/{{ replace $cwe "CWE-" "" }}.html">https://cwe.mitre.org/data/definitions/{{ replace $cwe "CWE-" "" }}.html</a>
+			</li>
+	{{ end }}
+		</ul>
+		{{ if (fileExists $steps_to_reproduce) -}}
+<h3>Steps to reproduce</h3>
+		{{readFile $steps_to_reproduce | markdownify}}
+		{{- end}}
+<!-- /.container -->
+<hr></div>
+
+<footer class="footline">
+	{{with .Params.LastModifierDisplayName}}
+	    <i class='fas fa-user'></i> <a href="mailto:{{ $.Params.LastModifierEmail }}">{{ . }}</a> {{with $.Date}} <i class='fas fa-calendar'></i> {{ .Format "02/01/2006" }}{{end}}
+	    </div>
+	{{end}}
+</footer>
+
+{{ partial "footer.html" . }}

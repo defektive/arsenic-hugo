@@ -1,9 +1,11 @@
-{{ define "page_header" }}
-<div class="container">
-  <h2>Sweet Pipeline</h2>
-</div>
-{{ end }}
-{{ define "main" }}
+{{ partial "header.html" . }}
+
+{{ if eq .Kind "section" }}
+	{{ .Content }}
+{{end}}
+
+
+
 <div class="container">
 {{ $scratch := newScratch }}
   <!-- to check against multiple target tags, add more tags next to "TARGETTAG" -->
@@ -19,4 +21,12 @@
 {{ partial "host-table.html" ( dict "Pages" ($scratch.Get "test") ) }}
   <hr />
 </div>
-{{ end }}
+
+<footer class=" footline" >
+	{{with .Params.LastModifierDisplayName}}
+	    <i class='fas fa-user'></i> <a href="mailto:{{ $.Params.LastModifierEmail }}">{{ . }}</a> {{with $.Date}} <i class='fas fa-calendar'></i> {{ .Format "02/01/2006" }}{{end}}
+	    </div>
+	{{end}}
+</footer>
+
+{{ partial "footer.html" . }}

@@ -1,0 +1,127 @@
+
+.pull-right {
+  float: right;
+}
+a.pull-right {
+  padding: 0 0px;
+  margin: 1px 2px;
+  display: inline-block;
+}
+
+:root {
+  --critical-dark: #AC0400;
+  --critical-light: #FF5753;
+
+  --high-dark: #DD6600;
+  --high-light: #FFA253;
+
+  --medium-dark: #DD9400;
+  --medium-light: #FFC753;
+
+  --low-dark: #D3DB00;
+  --low-light: #F7FE53;
+
+  --info-dark: #006368;
+  --info-light: #41C1C6;
+}
+
+
+
+.risk-table td.risk-col {
+  text-align: center;
+}
+
+
+.risk-table td.risk-rating-25,
+.risk-table td.risk-rating-20 {
+  border: 1px solid var(--critical-dark);
+  color: #333;
+  background: var(--critical-light);
+}
+
+.risk-table td.risk-rating-10,
+.risk-table td.risk-rating-12,
+.risk-table td.risk-rating-15,
+.risk-table td.risk-rating-16 {
+  border: 1px solid var(--high-dark);
+  color: #333;
+  background: var(--high-light);
+}
+
+
+.risk-table td.risk-rating-6,
+.risk-table td.risk-rating-8,
+.risk-table td.risk-rating-9 {
+  border: 1px solid var(--medium-dark);
+  color: #333;
+  background: var(--medium-light);
+}
+
+
+.risk-table td.risk-rating-3,
+.risk-table td.risk-rating-4,
+.risk-table td.risk-rating-5 {
+  border: 1px solid var(--low-dark);
+  color: #333;
+  background: var(--low-light);
+}
+
+
+.risk-table td.risk-rating-1,
+.risk-table td.risk-rating-2 {
+  border: 1px solid var(--info-dark);
+  color: #333;
+  background: var(--info-light);
+}
+
+
+.risk-table.likelihood-CRITICAL tr.risk-row-5 td.risk-rating-0,
+.risk-table.likelihood-HIGH tr.risk-row-4 td.risk-rating-0,
+.risk-table.likelihood-MEDIUM tr.risk-row-3 td.risk-rating-0,
+.risk-table.likelihood-LOW tr.risk-row-2 td.risk-rating-0,
+.risk-table.likelihood-INFORMATIONAL tr.risk-row-1 td.risk-rating-0,
+.risk-table.impact-CRITICAL td.risk-col-5.risk-rating-0,
+.risk-table.impact-HIGH td.risk-col-4.risk-rating-0,
+.risk-table.impact-MEDIUM td.risk-col-3.risk-rating-0,
+.risk-table.impact-LOW td.risk-col-3.risk-rating-0,
+.risk-table.impact-INFORMATIONAL td.risk-col-1.risk-rating-0 {
+  background: #B1D5F1;
+}
+
+.risk-table.impact-CRITICAL td.risk-col-5,
+.risk-table.likelihood-CRITICAL tr.risk-row-5 td,
+.risk-table.impact-HIGH td.risk-col-4,
+.risk-table.likelihood-HIGH tr.risk-row-4 td,
+.risk-table.impact-MEDIUM td.risk-col-3,
+.risk-table.likelihood-MEDIUM tr.risk-row-3 td,
+.risk-table.impact-LOW td.risk-col-2,
+.risk-table.likelihood-LOW tr.risk-row-2 td,
+.risk-table.impact-INFORMATIONAL td.risk-col-1,
+.risk-table.likelihood-INFORMATIONAL tr.risk-row-1 td {
+  border: 2px solid #333;
+}
+
+.rotate-label {
+  width: 1px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  vertical-align: middle !important;
+}
+
+.rotate-label > div {
+  transform: rotate(-90deg);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.sticky-header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 56px;
+  z-index: 9999;
+}
+
+.sticky-header h2{
+  margin-bottom: 5px;
+}

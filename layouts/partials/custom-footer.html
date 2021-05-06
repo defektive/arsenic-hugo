@@ -1,0 +1,12 @@
+<!-- Partial intended to be overwritten with tags loaded at the end of the page loading (usually for Javascript)
+<script>
+    console.log("running some javascript");
+</script>
+-->
+
+
+<script>
+$("a").attr("rel", "noopener noreferrer nofollow")
+$("a[data-vector]").each((index, el) => { $(el).attr("href", $(el).attr("href") + $(el).data("vector") ) })
+$(".container table:not(.table)").addClass("table")
+</script>

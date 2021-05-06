@@ -1,6 +1,14 @@
 name = "arsenic"
 description = "Pentesting data never looked so good"
-min_version= "0.48"
+license = "MIT"
+tags = ["pentesting", "grav", "learn", "doc", "search"]
+features = ["documentation", "menu", "nested sections", "search", "mermaid"]
+min_version = 0.25
 
 [author]
   name = "defektive"
+
+[original]
+  name = "Grav Learn"
+  homepage = "https://learn.getgrav.org/"
+  repo = "https://github.com/getgrav/grav-learn"

@@ -1,10 +1,56 @@
-{{ define "page_header" }}
-<div class="container">
-  <h2>Summary of {{ .Title }}</h2>
+{{ partial "header.html" . }}
+
+{{ if eq .Kind "section" }}
+	{{ .Content }}
+{{end}}
+
+<div class="pull-right">
 </div>
-{{ end }}
-{{ define "main" }}
-<div class="container">
-{{ partial "host-table.html" . }}
-</div>
-{{ end }}
+<table class='table table-striped table-hover'>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Hostnames</th>
+      <th>IP Addresses</th>
+      <th>Flags</th>
+      <th>Open Ports</th>
+    </tr>
+  </thead>
+  {{ range .Pages }}
+  {{ if strings.HasSuffix .Path "00_metadata.md"}}
+  <tr class="{{ if or (in .Params.flags "out of scope") (in .Params.flags "Out of Scope") (in .Params.flags "Out Of Scope") -}}out-of-scope{{ end -}} {{ if or (in .Params.flags "Unreviewed")  -}}Unreviewed{{ end -}}">
+    <td>
+      <a href="{{.Permalink}}">
+        <span class="post-title">{{ .Params.Name }}</span>
+      </a>
+    </td>
+    <td>
+      {{ len .Params.Hostnames }}
+    </td>
+    <td>
+      {{ len .Params.IPAddresses }}
+    </td>
+    <td>
+      {{ range .Params.Flags }}
+      <span class="badge badge-secondary">{{ . }}</span>
+      {{ end }}
+    </td>
+    <td>
+      {{if .Params.TCPPorts}}TCP: {{ delimit (.Params.TCPPorts) " " }}{{end}}
+      {{if .Params.UDPPorts}}UDP: {{ delimit (.Params.UDPPorts) " " }}{{end}}
+    </td>
+  </tr>
+  {{ end }}
+  {{ end }}
+</table>
+
+
+
+  <footer class=" footline" >
+  	{{with .Params.LastModifierDisplayName}}
+  	    <i class='fas fa-user'></i> <a href="mailto:{{ $.Params.LastModifierEmail }}">{{ . }}</a> {{with $.Date}} <i class='fas fa-calendar'></i> {{ .Format "02/01/2006" }}{{end}}
+  	    </div>
+  	{{end}}
+  </footer>
+
+  {{ partial "footer.html" . }}

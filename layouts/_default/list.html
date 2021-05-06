@@ -1,22 +1,22 @@
-{{ define "page_header" }}
-<div class="container">
-  <h2>Summary of {{ .Title }}</h2>
-</div>
-{{ end }}
-{{ define "main" }}
-<div class="container">
-{{ if .Content }}
-  <div class="content">{{ .Content }}</div>
-{{ end }}
-  <ul class="posts-list">
-  {{ range .Pages }}
-    <li class="post-item">
-      <a href="{{.Permalink}}">
-        <span class="post-title">{{.Dir}}</span>
-        <span class="post-day"></span>
-      </a>
-    </li>
-  {{ end }}
-  </ul>
-</div>
-{{ end }}
+{{ partial "header.html" . }}
+
+{{ if eq .Kind "section" }}
+	{{ .Content }}
+{{end}}
+
+{{ if or (eq .Kind "taxonomy") (eq .Kind "term") }}
+<ul>
+	{{ range .Pages }}
+		<li><a href="{{.RelPermalink}}">{{.Title}}</a></li>
+	{{ end }}
+</ul>
+{{end}}
+
+<footer class=" footline" >
+	{{with .Params.LastModifierDisplayName}}
+	    <i class='fas fa-user'></i> <a href="mailto:{{ $.Params.LastModifierEmail }}">{{ . }}</a> {{with $.Date}} <i class='fas fa-calendar'></i> {{ .Format "02/01/2006" }}{{end}}
+	    </div>
+	{{end}}
+</footer>
+
+{{ partial "footer.html" . }}
