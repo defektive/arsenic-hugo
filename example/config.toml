@@ -3,8 +3,9 @@ title = "Pentest Report"
 languageCode = "en-us"
 theme = "arsenic"
 
-PygmentsCodeFences = true
-PygmentsStyle = "monokai"
+
+[outputs]
+home = [ "HTML", "RSS", "JSON"]
 
 paginate  = 0
 rssLimit  = 0  # Maximum number of items in the RSS feed.
@@ -54,6 +55,8 @@ rssLimit  = 0  # Maximum number of items in the RSS feed.
 # Personalization params
 #
 [params]
+
+    themeVariant = "red"
 
     # optionally specify where the content is
     findingSections = ["findings"]
