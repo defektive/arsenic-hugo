@@ -25,8 +25,6 @@ a.pull-right {
   --info-light: #41C1C6;
 }
 
-
-
 .risk-table td.risk-col {
   text-align: center;
 }
@@ -83,21 +81,21 @@ a.pull-right {
 .risk-table.impact-CRITICAL td.risk-col-5.risk-rating-0,
 .risk-table.impact-HIGH td.risk-col-4.risk-rating-0,
 .risk-table.impact-MEDIUM td.risk-col-3.risk-rating-0,
-.risk-table.impact-LOW td.risk-col-3.risk-rating-0,
+.risk-table.impact-LOW td.risk-col-2.risk-rating-0,
 .risk-table.impact-INFORMATIONAL td.risk-col-1.risk-rating-0 {
   background: #B1D5F1;
 }
 
-.risk-table.impact-CRITICAL td.risk-col-5,
 .risk-table.likelihood-CRITICAL tr.risk-row-5 td,
-.risk-table.impact-HIGH td.risk-col-4,
 .risk-table.likelihood-HIGH tr.risk-row-4 td,
-.risk-table.impact-MEDIUM td.risk-col-3,
 .risk-table.likelihood-MEDIUM tr.risk-row-3 td,
-.risk-table.impact-LOW td.risk-col-2,
 .risk-table.likelihood-LOW tr.risk-row-2 td,
-.risk-table.impact-INFORMATIONAL td.risk-col-1,
-.risk-table.likelihood-INFORMATIONAL tr.risk-row-1 td {
+.risk-table.likelihood-INFORMATIONAL tr.risk-row-1 td,
+.risk-table.impact-CRITICAL td.risk-col-5,
+.risk-table.impact-HIGH td.risk-col-4,
+.risk-table.impact-MEDIUM td.risk-col-3,
+.risk-table.impact-LOW td.risk-col-2,
+.risk-table.impact-INFORMATIONAL td.risk-col-1 {
   border: 2px solid #333;
 }
 
