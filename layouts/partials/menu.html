@@ -61,42 +61,8 @@
           <a href="/sections/">
               Report
           </a>
-          <ul class="toc">
-            {{ range $index, $element := .Site.Params.reportSections }}
-              {{ $file := print "content/sections/" $element.file ".md" }}
-              {{ if fileExists $file }}
-            <li>
-              <a href="#{{$element.file}}">{{$element.label}}</a>
-            </li>
-              {{ end }}
-            {{ end }}
-            <li>
-              <a href="#findings-summary">Summary of Findings</a>
-            {{ if len (where .Site.Pages "Section" "social") }}
-              <li>
-                <a href="#social">Social</a>
-              </li>
-            {{ end }}
-            {{ if len (where .Site.Pages "Section" "mobile") }}
-              <li>
-                <a href="#mobile">Mobile</a>
-              </li>
-            {{ end }}
-              <li>
-                <a href="#findings">Findings</a>
-                <ul>
-            {{ $.Scratch.Set "counter" 0 }}
-            {{ range $index, $element :=  (sort (sort (where (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "!=" nil) ".Title" "asc") ".Params.cvss.score" "desc") }}
-              {{ if .Params.cvss.severity }}
-                {{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
-                  <li>
-                    <a href="#finding-{{  $.Scratch.Get "counter"  }}">#{{  $.Scratch.Get "counter"  }} {{ .Title | markdownify }}</a>
-                  </li>
-              {{ end }}
-            {{ end }}
-                </ul>
-              </li>
-            </ul>
+          {{ partial "report-toc.html" . }}
+
           </li>
 
         <li data-nav-id="https://www.first.org/cvss/calculator/3.0" title="https://www.first.org/cvss/calculator/3.0" class="dd-item">

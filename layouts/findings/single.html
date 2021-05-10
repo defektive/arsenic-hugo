@@ -23,8 +23,6 @@ Affected Hosts:
 		{{$recommendations := print "content/" .Dir "/03-recommendations.md" }}
 		{{$references := print "content/" .Dir "/04-references.md" }}
 		{{readFile $summary | markdownify}}
-<h3>Affected Assets</h3>
-		{{readFile $affected_assets | markdownify}}
 <h3>Recommendations</h3>
 		{{readFile $recommendations | markdownify}}
 <h3>References</h3>
@@ -45,6 +43,12 @@ Affected Hosts:
 <h3>Steps to reproduce</h3>
 		{{readFile $steps_to_reproduce | markdownify}}
 		{{- end}}
+
+
+		<h3>Affected Assets</h3>
+		<div class="affected_assets">
+			{{readFile $affected_assets | markdownify}}
+		</div>
 <!-- /.container -->
 <hr></div>
 
