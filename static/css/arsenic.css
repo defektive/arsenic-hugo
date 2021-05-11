@@ -199,7 +199,7 @@ p.page-break {
     page-break-before: avoid;
   }
 
-  hr, .copy-to-clipboard, #body-inner > h1, #navigation, #sidebar, #top-bar-sticky-wrapper, .report-nav-link {
+  hr, .copy-to-clipboard, #body-inner > h1, #navigation, #sidebar, #sidebar-toggle-span, #top-bar-sticky-wrapper, .report-nav-link {
     display: none !important;
   }
 
