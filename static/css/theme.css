@@ -902,8 +902,7 @@ td {
     border-right-color: rgba(0, 0, 0, 0.8);
 }
 .highlightable {
-    padding: 1rem 0 1rem;
-    overflow: auto;
+    padding: 0 0 1rem;
     position: relative;
 }
 .hljs::selection, .hljs span::selection {

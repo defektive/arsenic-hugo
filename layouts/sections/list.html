@@ -22,8 +22,9 @@
 </div>
 
 <div id="cover-page" class="container">
-  pizza
+  Report
 </div>
+
 <a class="anchor" id="top"></a>
 <div class="container">
   <h2 class="section-heading"><a href="#section-toc">Table of Contents</a></h2>
@@ -156,34 +157,37 @@
   </table>
 </div>
 
-<div>
-  <a class="anchor" id="findings"></a>
-  {{ $.Scratch.Set "sectionCounter" (add ($.Scratch.Get "sectionCounter") 1) }}
-  <a href="#top" class="pull-right report-nav-link"><i class="fa fa-lg fa-home" aria-hidden="true"></i></a>
-  <a href="#section-{{  sub ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right report-nav-link"><i class="fa fa-lg fa-arrow-circle-up" aria-hidden="true"></i></a>
-  <a href="#section-{{  add ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right report-nav-link"><i class="fa fa-lg fa-arrow-circle-down" aria-hidden="true"></i></a>
-  <a class="anchor" id="section-{{ $.Scratch.Get "sectionCounter" }}"></a>
-  <h2 class="section-heading"><a href="#section-{{ ($.Scratch.Get "sectionCounter") }}">Findings</a></h2>
-</div>
+
 {{ $.Scratch.Set "counter" 0 }}
 {{ range $index, $element := sort (where (.Site.RegularPages.ByParam "sec") "Section" "in" .Site.Params.findingSections) ".Params.cvss.score" "desc" }}
   {{ if .Params.cvss.severity }}
-  {{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
-
+    {{ $.Scratch.Set "counter" (add ($.Scratch.Get "counter") 1) }}
     {{$summary := print "content/" .Dir "/01-summary.md" }}
     {{$affected_assets := print "content/" .Dir "/02-affected_assets.md" }}
     {{$recommendations := print "content/" .Dir "/03-recommendations.md" }}
     {{$references := print "content/" .Dir "/04-references.md" }}
 
     <div class="container">
+      {{ if eq ($.Scratch.Get "counter") 1 }}
+      <div>
+        <a class="anchor" id="findings"></a>
+        {{ $.Scratch.Set "sectionCounter" (add ($.Scratch.Get "sectionCounter") 1) }}
+        <a href="#top" class="pull-right report-nav-link"><i class="fa fa-lg fa-home" aria-hidden="true"></i></a>
+        <a href="#section-{{  sub ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right report-nav-link"><i class="fa fa-lg fa-arrow-circle-up" aria-hidden="true"></i></a>
+        <a href="#section-{{  add ($.Scratch.Get "sectionCounter") 1  }}" class="pull-right report-nav-link"><i class="fa fa-lg fa-arrow-circle-down" aria-hidden="true"></i></a>
+        <a class="anchor" id="section-{{ $.Scratch.Get "sectionCounter" }}"></a>
+        <h2 class="section-heading"><a href="#section-{{ ($.Scratch.Get "sectionCounter") }}">Findings</a></h2>
+      </div>
+      {{end}}
+      <a class="anchor" id="finding-{{ $.Scratch.Get "counter" }}"></a>
+      <div class="sticky-header">
+        <a href="#top" class="pull-right report-nav-link"><i class="fa fa-lg fa-home" aria-hidden="true"></i></a>
+        <a href="#finding-{{  sub ($.Scratch.Get "counter") 1  }}" class="pull-right report-nav-link"><i class="fa fa-lg fa-arrow-circle-up" aria-hidden="true"></i></a>
+        <a href="#finding-{{  add 1 ($.Scratch.Get "counter")  }}" class="pull-right report-nav-link"><i class="fa fa-lg fa-arrow-circle-down" aria-hidden="true"></i></a>
+        <h2 class="section-heading finding-{{ $.Scratch.Get "counter" }}"><a href="#finding-{{  ($.Scratch.Get "counter") }}">#{{  $.Scratch.Get "counter"  }} {{ .Title | markdownify }}</a> <br /><small>CVSS:{{ .Params.cvss.score }}/{{.Params.cvss.severity}}</small></h2>
+      </div>
       <div class="subsection">
-        <a class="anchor" id="finding-{{ $.Scratch.Get "counter" }}"></a>
-        <div class="sticky-header">
-          <a href="#top" class="pull-right report-nav-link"><i class="fa fa-lg fa-home" aria-hidden="true"></i></a>
-          <a href="#finding-{{  sub ($.Scratch.Get "counter") 1  }}" class="pull-right report-nav-link"><i class="fa fa-lg fa-arrow-circle-up" aria-hidden="true"></i></a>
-          <a href="#finding-{{  add 1 ($.Scratch.Get "counter")  }}" class="pull-right report-nav-link"><i class="fa fa-lg fa-arrow-circle-down" aria-hidden="true"></i></a>
-          <h2 class="section-heading finding-{{ $.Scratch.Get "counter" }}"><a href="#finding-{{  ($.Scratch.Get "counter") }}">#{{  $.Scratch.Get "counter"  }} {{ .Title | markdownify }}</a> <br /><small>CVSS:{{ .Params.cvss.score }}/{{.Params.cvss.severity}}</small></h2>
-        </div>
+
         <blockquote>
         {{ .Params.description }}
         </blockquote>

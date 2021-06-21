@@ -3,7 +3,7 @@
 {{ .Content }}
 
 
-<div class="container">
+<div class="as-container">
 <h2 class="section-heading">{{ .Title | markdownify }}</h2>
 <pre>
 Description: {{ .Params.description }}
@@ -49,7 +49,7 @@ Affected Hosts:
 		<div class="affected_assets">
 			{{readFile $affected_assets | markdownify}}
 		</div>
-<!-- /.container -->
+<!-- /.as-container -->
 <hr></div>
 
 <footer class="footline">
